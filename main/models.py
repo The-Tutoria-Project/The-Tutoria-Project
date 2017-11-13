@@ -19,9 +19,10 @@ class SearchTag(models.Model):
     tagName = models.CharField(max_length=128)
 
     def __str__(self):
-        return self.name
+        return self.tagName
 
-
+class SystemWallet(models.Model):
+    systemBalance = models.DecimalField(max_digits=10, decimal_places=2)
 
 # Create your models here.
 class Tutor(models.Model):
@@ -132,6 +133,7 @@ class Sessions(models.Model):
     bookedTime = models.ForeignKey(
         Availability, related_name='sessionKey', null=True)
     sessionAmount = models.DecimalField(max_digits=8, decimal_places=2)
+    systemWallet = models.ForeignKey(SystemWallet)
 
     def __str__(self):
         return self.studentID.firstName + " " + str(self.bookedTime.startTime) + " " + self.tutorID.firstName
@@ -179,9 +181,7 @@ class Coupon(models.Model):
     couponCode = models.CharField(max_length=6, default="000000")
     expiryDate = models.DateField()
 
-class SystemWallet(models.Model):
-    sessionDetails = models.ForeignKey(Sessions)
-    systemBalance = models.DecimalField(max_digits=10, decimal_places=2)
+
 
 #
 # class Booking(model.Model):

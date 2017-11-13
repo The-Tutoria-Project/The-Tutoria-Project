@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Tutor, Student, Availability, Sessions, Course, Review, Coupon, Wallet, SystemWallet
+from .models import User, Tutor, Student, Availability, Sessions, Course, Review, Coupon, Wallet, SystemWallet, SearchTag
 from django.contrib.admin.sites import AdminSite
 # from main.admin import courseadmin
 from The_Tutoria_Project.admin import courseadmin
@@ -14,6 +14,7 @@ admin.site.register(Course)
 admin.site.register(Coupon)
 admin.site.register(Wallet)
 admin.site.register(SystemWallet)
+admin.site.register(SearchTag)
 
 class CourseAdmin(admin.ModelAdmin):
     list_diplay = ['name']
