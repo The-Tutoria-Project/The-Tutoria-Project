@@ -263,7 +263,7 @@ def myWallet(request):
         if walletForm.is_valid():
 
             wallet.amount += walletForm.cleaned_data['amount']
-            wallet.save()    
+            wallet.save()
 
         else:
             print(walletForm.errors)
@@ -277,6 +277,8 @@ def myWallet(request):
 
 
     return render(request, 'main/wallet.html', {'wallet':wallet, 'user':currentUser, 'sessions':transactionList, 'walletForm': walletForm})
+
+
 
 '''def cancelSession(request):
 
