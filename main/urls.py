@@ -16,9 +16,11 @@ urlpatterns = [
     url(r'^home/$', views.homePage, name='home-page'),
     url(r'^search/$', views.search, name='search'),
     # url(r'^my_new_admin/(*.)', my_new_admin.root),
+    url(r'^register/$', views.register, name='register'),
     url(r'^studentreg/$', views.studentRegistration, name='studentreg'),
     url(r'^tutorreg/$', views.register2, name='tutorreg'),
-    url(r'^register/$', views.register, name='register'),
+    #url(r'^studentandtutreg/$', views.register3, name='tutorreg'),
+
     url(r'^signup/$', views.signup, name='signup'),
     url(r'^wallet/$', views.myWallet, name='wallet'),
     # url(r'^studentRegistration/$', views.studentRegistration, name='studentRegistration'),

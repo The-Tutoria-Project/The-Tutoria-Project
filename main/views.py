@@ -179,6 +179,10 @@ def bookSession(request):
     tutor = Tutor.objects.get(id=tutorID)  # get tutor object
 
     slot = Availability.objects.filter(tutor_id=tutorID, isAvailable=True)
+    wallet = Wallet.objects.get(user=sid.user)
+
+    currentDate = str(datetime.today().date());
+    currentTime = str(datetime.now().hour) + ":" + str(datetime.now().minute)
 
     if not slot:
         return HttpResponse('<em> Oops! This Tutor has no available time slots </em>')
@@ -190,12 +194,12 @@ def bookSession(request):
 
             try:
                 Sessions_instance = Sessions.objects.create(
-                    tutorID=tutor, studentID=sid, bookedTime=selectedSlot, sessionAmount=100)  # add the new session to the db table
+                    tutorID=tutor, studentID=sid, bookedTime=selectedSlot, sessionAmount=tutor.hourly_rate)  # add the new session to the db table
                 selectedSlot.isAvailable = False  # make the slot unavailable
                 selectedSlot.save()  # save the slot
-                balance = sid.wallet - tutor.hourly_rate
-                sid.wallet = balance
-                sid.save()
+                sessionAmount =  (float)(tutor.hourly_rate) + (float)(tutor.hourly_rate)*(0.05)
+                wallet.amount -= sessionAmount
+                #still stuff to do
                 print(balance)
                 return render(request, 'main/home.html', {})
                 # return HttpResponse("Your Session is Successfully Booked!")
@@ -203,7 +207,7 @@ def bookSession(request):
             except ValidationError as e:
                 return JsonResponse({'status': 'false', 'message': 'You have another session at the same time or already have a session with this tutor today!'}, status=500)
     # return render(request, self.template_name, {'slots': slot})
-    return render(request, 'main/session.html', {'slots': slot, 'tutor': tutor, 'balance': sid})
+    return render(request, 'main/session.html', {'slots': slot, 'tutor': tutor, 'balance': sid, 'currentDate': currentDate, 'currentTime': currentTime})
 
 
 @login_required
