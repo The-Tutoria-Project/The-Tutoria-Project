@@ -1,0 +1,266 @@
+{% extends 'main/baseapp.html' %}
+{% block body_block %}
+
+
+<br> <br>
+<div class="month">
+  <ul>
+
+    <li>
+      Availability for the next 7 days <br>
+      <span style="font-size:18px">for {{ tutor.firstName}} {{ tutor.lastName}}  </span>
+    </li>
+  </ul>
+</div>
+
+<div>
+  <ul class="wdays">
+    <li id="wd0" >Timings</li>
+    <li ><p  id="wd1"></p></li>
+      <li ><p  id="wd2"></p></li>
+        <li ><p  id="wd3"></p></li>
+          <li ><p  id="wd4"></p></li>
+            <li ><p  id="wd5"></p></li>
+              <li ><p  id="wd6"></p></li>
+                <li ><p  id="wd7"></p></li>
+  </ul>
+
+<ul class="weekdays">
+  <li id="d0" ></li>
+  <li ><p  id="d1"></p></li>
+    <li ><p  id="d2"></p></li>
+      <li ><p  id="d3"></p></li>
+        <li ><p  id="d4"></p></li>
+          <li ><p  id="d5"></p></li>
+            <li ><p  id="d6"></p></li>
+              <li ><p  id="d7"></p></li>
+
+</ul>
+
+
+
+<ul class="days">
+  <li id="00">09:00-10:00</li>
+  <li><p id='s11'></p></li>
+  <li><p id='s12'></p></li>
+  <li><p id='s13'></p></li>
+  <li><p id='s14'></p></li>
+  <li><p id='s15'></p></li>
+  <li><p id='s16'></p></li>
+  <li><p id='s17'></p></li>
+
+
+  <li id="00">10:00-11:00</li>
+  <li><p id='s21'></p></li>
+  <li><p id='s22'></p></li>
+  <li><p id='s23'></p></li>
+  <li><p id='s24'></p></li>
+  <li><p id='s25'></p></li>
+  <li><p id='s26'></p></li>
+  <li><p id='s27'></p></li>
+
+
+  <li id="00">11:00-12:00</li>
+  <li><p id='s31'></p></li>
+  <li><p id='s32'></p></li>
+  <li><p id='s33'></p></li>
+  <li><p id='s34'></p></li>
+  <li><p id='s35'></p></li>
+  <li><p id='s36'></p></li>
+  <li><p id='s37'></p></li>
+
+
+  <li id="00">12:00-01:00</li>
+  <li><p id='s41'></p></li>
+  <li><p id='s42'></p></li>
+  <li><p id='s43'></p></li>
+  <li><p id='s44'></p></li>
+  <li><p id='s45'></p></li>
+  <li><p id='s46'></p></li>
+  <li><p id='s47'></p></li>
+
+
+  <li id="00">01:00-02:00</li>
+  <li><p id='s51'></p></li>
+  <li><p id='s52'></p></li>
+  <li><p id='s53'></p></li>
+  <li><p id='s54'></p></li>
+  <li><p id='s55'></p></li>
+  <li><p id='s56'></p></li>
+  <li><p id='s57'></p></li>
+
+
+  <li id="00">02:00-03:00</li>
+  <li><p id='s61'></p></li>
+  <li><p id='s62'></p></li>
+  <li><p id='s63'></p></li>
+  <li><p id='s64'></p></li>
+  <li><p id='s65'></p></li>
+  <li><p id='s66'></p></li>
+  <li><p id='s67'></p></li>
+
+<li id="00">03:00-04:00</li>
+<li><p id='s71'></p></li>
+<li><p id='s72'></p></li>
+<li><p id='s73'></p></li>
+<li><p id='s74'></p></li>
+<li><p id='s75'></p></li>
+<li><p id='s76'></p></li>
+<li><p id='s77'></p></li>
+
+    <li id="00">04:00-05:00</li>
+    <li><p id='s81'></p></li>
+    <li><p id='s82'></p></li>
+    <li><p id='s83'></p></li>
+    <li><p id='s84'></p></li>
+    <li><p id='s85'></p></li>
+    <li><p id='s86'></p></li>
+    <li><p id='s87'></p></li>
+
+</ul>
+</div>
+
+
+<br><br>
+
+<h4 id="payamt"> Payment Amount in HKD: </h4>
+<br>
+
+<form method="POST">
+
+  {% csrf_token %}
+
+<select name="slot_id">
+{% for entry in slots %}
+    <option value="{{ entry.id }}"> {{entry.date }}, {{ entry.startTime }} - {{ entry.endTime}}</option>
+{% endfor %}
+</select>
+
+<input type="submit" value = "Book" class="w3-bar-item w3-button w3-round-xxlarge w3-padding-large w3-margin-left w3-pink w3-xlarge w3-hover-teal w3-center" onclick="myFunction()">
+</form>
+
+
+
+<script>
+function myFunction() {
+   var a="{{ tutor.firstName}}  {{ tutor.lastName}}";
+   var amt = "{{ tutor.hourly_rate}}";
+   var bal = "{{balance.wallet}}";
+   alert("You have booked your session with "+a +". The fee for this session is HKD"+amt + ". Your balance amount is HKD" + bal);
+}
+</script>
+
+<script>
+
+var curdString="{{currentDate}}";
+var curt="{{currentTime}}";
+var myDate = new Date(curdString);
+
+var i;
+for (i = 1; i <= 7; i++) {
+  var g="d"+i;
+  var g1="wd"+i;
+  myDate.setDate(myDate.getDate() + 1);
+  var myDS=myDate.toDateString();
+  var myDay=myDate.getDay();
+  document.getElementById(g1).innerHTML = myDS[0]+myDS[1]+myDS[2];
+  document.getElementById(g).innerHTML = myDS.substring(4);
+}
+
+var j;
+/////////////TO set inner elements
+for (i = 1; i <= 7; i++) {
+  for (j = 1; j <= 8; j++) {
+  var g="s"+j+i;
+  document.getElementById(g).innerHTML = "Available";
+}}
+
+{% for entry in slots %}
+
+var val="{{ entry.startTime }} {{ entry.endTime}}";
+var myDate1 = new Date("{{entry.date}}");
+myDate = new Date(curdString);
+
+for (j = 1; j <= 7; j++) {
+var curd1 = new Date();
+curd1.setDate(myDate.getDate() + j);
+var s1=myDate1.getDate();
+var s2=curd1.getDate();
+
+  //document.getElementById('s56').innerHTML = s1.valueOf();
+
+if( s1.valueOf() === s2.valueOf())
+{
+
+  //document.getElementById('s44').innerHTML = "Bro";
+  var tempo = val[0]+val[1];
+  var timecur= parseInt(tempo) - 9;
+  //document.getElementById('s44').innerHTML = timecur;
+  if(timecur>0)
+  {
+  id=j*10 + timecur+1;
+  var a="s"+id;
+  //document.getElementById('s44').innerHTML = id;
+  document.getElementById(a).innerHTML = "Blocked";
+  }
+}
+
+
+}
+
+
+{% endfor %}
+
+{% for entry in sessions %}
+
+var val="{{ entry.bookedTime.startTime }} {{ entry.bookedTime.endTime}}";
+var myDate1 = new Date("{{entry.bookedTime.date}}");
+myDate = new Date(curdString);
+
+for (j = 1; j <= 7; j++) {
+var curd1 = new Date();
+curd1.setDate(myDate.getDate() + j);
+var s1=myDate1.getDate();
+var s2=curd1.getDate();
+
+  //document.getElementById('s56').innerHTML = s1.valueOf();
+
+if( s1.valueOf() === s2.valueOf())
+{
+
+  //document.getElementById('s44').innerHTML = "Bro";
+  var tempo = val[0]+val[1];
+  var timecur= parseInt(tempo) - 9;
+  //document.getElementById('s44').innerHTML = timecur;
+  if(timecur>0)
+  {
+  id=j*10 + timecur+1;
+  var a="s"+id;
+  //document.getElementById('s44').innerHTML = id;
+  document.getElementById(a).innerHTML = "Blocked";
+  }
+}
+
+
+}
+
+
+{% endfor %}
+function calendarfn(id) {
+
+ document.getElementById(id).background = 'green';
+
+}
+</script>
+
+
+<script>
+function myFunction() {
+   var a="{{ tutor.firstName}}  {{ tutor.lastName}}";
+   var amt = "{{ tutor.hourly_rate}}";
+   var bal = "{{balance.wallet}}";
+   alert("You have booked your session with "+a +". The fee for this session is HKD"+amt + ". Your balance amount is HKD" + bal);
+}
+</script>
+
+{% endblock %}
