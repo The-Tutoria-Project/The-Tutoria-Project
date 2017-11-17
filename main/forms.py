@@ -22,7 +22,7 @@ class TutorInfoForm(forms.ModelForm):
     class Meta():
         model = Tutor
         fields = ('firstName', 'lastName', 'tutor_email', 'courses', 'tutor_booking_status',
-                  'university_name', 'hourly_rate', 'tutor_intro', 'avatar')
+                  'university_name', 'hourly_rate', 'tutor_intro', 'isStudent','avatar', 'wallet')
 
 
 class BookingForm(forms.ModelForm):

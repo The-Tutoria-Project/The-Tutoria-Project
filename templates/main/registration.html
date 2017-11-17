@@ -7,7 +7,7 @@
     <!-- <li><a href="{% url 'main:user_login' %}">LOGIN HERE</a></li> -->
      <li><a href="{% url 'main:studentreg' %}?value1={{user.username}}">REGISTER AS STUDENT</a></li>
    <li><a href="{% url 'main:tutorreg' %}?value1={{user.username}}">REGISTER AS TUTOR</a></li>
-   <li><a href="{% url 'main:studentandtutorreg' %}?value1={{user.username}}">REGISTER AS BOTH</a></li>
+   
   {% else %}
   <h2>Register Here! </h1>
   <h3> Fill out this form:</h3>

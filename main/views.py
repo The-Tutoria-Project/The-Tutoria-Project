@@ -13,7 +13,7 @@ from django.views.generic import View, ListView, DetailView, TemplateView,Update
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from main.models import Availability, Sessions, Student, Tutor, Course, Wallet
+from main.models import Availability, Sessions, Student, Tutor, Course, Wallet, SystemWallet
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
@@ -85,8 +85,8 @@ def studentRegistration(request):
             Student.user = request.user
             print(request.user)
 
-            if 'profile_pic' in request.FILES:
-                Student.profile_pic = request.FILES['profile_pic']
+            if 'avatar' in request.FILES:
+                Student.avatar = request.FILES['profile_pic']
 
             Student.save()
 
@@ -117,9 +117,12 @@ def register2(request):
             tutorInst = Tutor_form.save(commit=False)
             tutorInst.user = request.user
 
-            # if 'profile_pic' in request.FILES:
-            #     Student.profile_pic=request.FILES['profile_pic']
-
+            if 'ava†ar' in request.FILES:
+                Tutor.avatar=request.FILES['profile_pic']
+            if (tutorInst.isStudent==True):
+                Student_instance=Student.objects.create(
+                    user=request.user, firstName=tutorInst.firstName, lastName=tutorInst.lastName, email=tutorInst.tutor_email, wallet=tutorInst.wallet)
+                Student_instance.save()
             tutorInst.save()
 
             registered = True
@@ -133,6 +136,8 @@ def register2(request):
 
     return render(request, 'main/tutorreg.html', {'Tutor_form': Tutor_form, 'registered': registered})
 
+def choose_login(request):
+    return render(request, 'Chooselogin.html', {})
 
 def user_login(request):
     if request.method == 'POST':
@@ -154,6 +159,25 @@ def user_login(request):
     else:
         return render(request, 'main/login.html', {})
 
+def user_login1(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username=username, password=password)
+        print(str(user))
+        if user:
+            if user.is_active:
+                login(request, user)
+                return render(request, 'main/WelcomeTutor.html', {})
+                # return HttpResponseRedirect(reverse('index'))
+            else:
+                return HttpResponse("ACCOUNT INACTIVE")
+        else:
+            print("Login failed")
+            return HttpResponse("Invalid login details")
+    else:
+        return render(request, 'main/login1.html', {})
 
 class TutorListView(ListView):
 
@@ -188,7 +212,7 @@ def bookSession(request):
 
     currentDate = str(datetime.today().date());
     currentTime = str(datetime.now().hour) + ":" + str(datetime.now().minute)
-
+    syswallet = SystemWallet.objects.get()
     sessions = Sessions.objects.filter(tutorID=tutorID)
 
     if not slot:
@@ -201,13 +225,13 @@ def bookSession(request):
 
             try:
                 Sessions_instance = Sessions.objects.create(
-                    tutorID=tutor, studentID=sid, bookedTime=selectedSlot, sessionAmount=tutor.hourly_rate)  # add the new session to the db table
+                    tutorID=tutor, studentID=sid, bookedTime=selectedSlot, sessionAmount=tutor.hourly_rate, systemWallet=syswallet)  # add the new session to the db table
                 selectedSlot.isAvailable = False  # make the slot unavailable
                 selectedSlot.save()  # save the slot
                 sessionAmount =  (float)(tutor.hourly_rate) + (float)(tutor.hourly_rate)*(0.05)
-                wallet.amount -= sessionAmount
+                #wallet.amount -= sessionAmount
                 #still stuff to do
-                print(balance)
+                #print(balance)
                 return render(request, 'main/home.html', {})
                 # return HttpResponse("Your Session is Successfully Booked!")
 

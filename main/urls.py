@@ -28,6 +28,8 @@ urlpatterns = [
 
 
     url(r'^user_login/$', views.user_login, name='user_login'),
+    url(r'^tutor_login/$', views.user_login1, name='tutor_login'),
+
     url(r'^session/$', views.bookSession, name='session'),
     url(r'^mySessions/$', views.mySessions, name='mySessions'),
     url(r'^tutors$', views.TutorListView.as_view(), name='tutor-list'),
