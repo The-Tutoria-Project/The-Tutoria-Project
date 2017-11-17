@@ -207,6 +207,11 @@ class TutorUpdateView(UpdateView):
 @login_required
 def bookSession(request):
 
+    if request.method == 'POST':
+        bookeddate = request.POST['bookeddate']
+        print(bookeddate)
+        return HttpResponse('success')
+
     current_user = request.user
     print(current_user.id)
     # basically if there is a post request take that student_id, tutor id and time slot and save it in session.
@@ -225,17 +230,9 @@ def bookSession(request):
     syswallet = SystemWallet.objects.get()
     sessions = Sessions.objects.filter(tutorID=tutorID)
 
-    if request.is_ajax():
-        # extract your params (also, remember to validate them)
-        param = request.POST.get('param', None)
-        another_param = request.POST.get('another param', None)
-        print(param)
 
-        # construct your JSON response by calling a data method from elsewhere
-        #items, summary = build_my_response(param, another_param)
 
-        #return JsonResponse({'result': 'OK', 'data': {'items': items, 'summary': summary}})
-    #return HttpResponseBadRequest()
+
 
     if not slot:
         return HttpResponse('<em> Oops! This Tutor has no available time slots </em>')

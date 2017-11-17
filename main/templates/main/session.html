@@ -224,26 +224,7 @@
 
 
 <script>
-function bookSession(){
 
-  document.getElementById('bookbtn').innerHTML = "GAYSEX";
-
-  $.ajax({type: 'POST',
-                url: '/tutor/',                            // some data url
-                data: {param: 'hello', another_param: 5},       // some params
-                success: function (response) {                  // callback
-                    if (response.result === 'OK') {
-                        if (response.data && typeof(response.data) === 'object') {
-                            // do something with the successful response.data
-                            // e.g. response.data can be a JSON object
-                        }
-                    } else {
-                        // handle an unsuccessful response
-                    }
-                }
-               });
-
-}
 </script>
 
 <script>
@@ -398,6 +379,7 @@ else {
 var selected=0;
 
 var currentid;
+var selecteddate=new Date();
 function calendarfn() {
 
   if(document.getElementById(this.id).className == "active")
@@ -415,10 +397,27 @@ function calendarfn() {
 
 
 
-
     }
   }
 
+
+}
+
+
+
+var URL = "{% url 'main:session' %}"
+function bookSession(){
+
+  document.getElementById('bookbtn').innerHTML = "GAYSEX";
+
+var bookeddate="{{currentDate}}";
+
+    var data = {'bookeddate': bookeddate,
+  'csrfmiddlewaretoken': '{{ csrf_token }}'};
+    $.post(URL, data, function(response){
+        if(response === 'success'){ alert('Yay!'); }
+        else{ alert('Error! :('); }
+    });
 
 }
 </script>
