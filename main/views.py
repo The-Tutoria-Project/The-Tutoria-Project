@@ -159,7 +159,7 @@ def user_login(request):
     else:
         return render(request, 'main/login.html', {})
 
-def user_login1(request):
+def user_login1(request): #For Tutor
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -168,9 +168,19 @@ def user_login1(request):
         print(str(user))
         if user:
             if user.is_active:
-                login(request, user)
-                return render(request, 'main/WelcomeTutor.html', {})
-                # return HttpResponseRedirect(reverse('index'))
+
+                try:
+                    Tutor.objects.get(user=user)
+                    login(request, user)
+                    return render(request, 'main/WelcomeTutor.html', {})
+                    # return HttpResponseRedirect(reverse('index'))
+
+                except:
+                    print("imposter")
+                    return HttpResponse("Invalid login details")
+
+
+
             else:
                 return HttpResponse("ACCOUNT INACTIVE")
         else:
@@ -214,6 +224,18 @@ def bookSession(request):
     currentTime = str(datetime.now().hour) + ":" + str(datetime.now().minute)
     syswallet = SystemWallet.objects.get()
     sessions = Sessions.objects.filter(tutorID=tutorID)
+
+    if request.is_ajax():
+        # extract your params (also, remember to validate them)
+        param = request.POST.get('param', None)
+        another_param = request.POST.get('another param', None)
+        print(param)
+
+        # construct your JSON response by calling a data method from elsewhere
+        #items, summary = build_my_response(param, another_param)
+
+        #return JsonResponse({'result': 'OK', 'data': {'items': items, 'summary': summary}})
+    #return HttpResponseBadRequest()
 
     if not slot:
         return HttpResponse('<em> Oops! This Tutor has no available time slots </em>')
