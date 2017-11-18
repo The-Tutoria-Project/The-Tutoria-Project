@@ -6,7 +6,8 @@
 <br> <br>
 <div class="month">
   <ul>
-
+    <li class="prev" onclick="weekback()">&#10094;</li>
+    <li class="next" onclick="weeknext()">&#10095;</li>
     <li>
       Set availability for the next 14 days <br>
       <span style="font-size:18px">for {{ tutor.firstName}} {{ tutor.lastName}}  </span>
@@ -217,9 +218,16 @@
 </script>
 
 <script>
+var weekno=1;
+function generateElements(weekno){
 var curdString="{{currentDate}}";
 var curt="{{currentTime}}";
 var myDate = new Date(curdString);
+
+if(weekno==2)
+{
+  myDate.setDate(myDate.getDate()+7); document.getElementById('bookbtn').innerHTML+"WEEK2";
+}
 
 var i;
 for (i = 1; i <= 7; i++) {
@@ -234,7 +242,12 @@ for (i = 1; i <= 7; i++) {
 
 var j;
 /////////////TO set inner elements
+myDate = new Date(curdString);
 
+if(weekno==2)
+{
+  myDate.setDate(myDate.getDate()+7); document.getElementById('bookbtn').innerHTML+"WEEK2";
+}
 var checktut="{{ tutor.tutorType }}";
 if(checktut.valueOf() == 0){
 for (i = 1; i <= 7; i++) {
@@ -258,10 +271,9 @@ else {
 
 {% for entry in slots %}
 
-var val="{{ entry.startTime }} {{ entry.endTime}}";
+var val="{{ entry.startTime|time:'H:i'}} {{ entry.endTime|time:'H:i'}}";
 var myDate1 = new Date("{{entry.date}}");
-myDate = new Date(curdString);
-
+//myDate = new Date(curdString);
 for (j = 1; j <= 7; j++) {
 var curd1 = new Date();
 curd1.setDate(myDate.getDate() + j);
@@ -298,7 +310,7 @@ if( s1.valueOf() === s2.valueOf())
 var val="{{session.bookedStartTime|time:'H:i'}}"
 
 var myDate1 = new Date("{{session.bookedDate}}");
-myDate = new Date(curdString);
+//myDate = new Date(curdString);
 
 for (j = 1; j <= 7; j++) {
 var curd1 = new Date();
@@ -331,19 +343,11 @@ if( s1.valueOf() === s2.valueOf())
 
   }
 }
-
-
 }
-
-
 {% endfor %}
+}
+generateElements(weekno);
 
-
-
-</script>
-
-
-<script>
 var ctr=1;
 var timez=9;
 var checktut="{{ tutor.tutorType }}";
@@ -362,10 +366,16 @@ for (var i = 1; i <= 7; i++) {
       }
 }
 }
-</script>
-<script>
-//ELAPSED 24 Hr timez
 
+
+weekno=1;
+function weeknext(){
+weekno=2;//Update dates
+generateElements(weekno);
+}
+function weekback(){
+  weekno=1;
+generateElements(weekno);
 var a="{{currentTime}}";
 for(var i=1;i<=8;i++){
   var g="s"+i+"1";
@@ -382,10 +392,27 @@ for(var i=1;i<=8;i++){
 
   }
 }
-//Active Box
-</script>
+}
 
-<script>
+if(weekno == 1){
+var a="{{currentTime}}";
+for(var i=1;i<=8;i++){
+  var g="s"+i+"1";
+
+  if((i+8)<parseInt(a[0]+a[1]))
+  {
+    document.getElementById(g).innerHTML="Elapsed";
+    document.getElementById(g).className="elapsed";
+    if(checktut==0 && (a[3]>=3))
+    {
+      document.getElementById(g+"5").innerHTML="Elapsed";
+      document.getElementById(g).className="elapsed";
+    }
+
+  }
+}
+}
+//Active Box
 
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
@@ -396,10 +423,8 @@ function getParameterByName(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
-var sendTutorID = getParameterByName('value1')
 
-
-
+var sendTutorID = getParameterByName('value1');
 
 var checktut="{{ tutor.tutorType }}";
 var selected=0;
@@ -420,6 +445,7 @@ function calendarfn() {
     BorUB=1;
     currentid=this.id;
     var iddate=parseInt(currentid[2]);
+    myDate=new Date("{{currentDate}}");
     selecteddate.setDate(myDate.getDate() + iddate);
     if(checktut==0){
     if(parseInt(currentid[3])==5)
@@ -430,7 +456,11 @@ function calendarfn() {
     selectedEndTime.setDate(selecteddate.getDate()); selectedEndTime.setHours(selecteddate.getHours());
     if(checktut==0){selectedEndTime.setMinutes(selecteddate.getMinutes()+30);}
     else {selectedEndTime.setMinutes(selecteddate.getMinutes()+60);}
+
+
+    //document.getElementById('bookbtn').innerHTML=selecteddate;
     blockSession(BorUB);
+
     //document.getElementById('selected').innerHTML = "Selected Slot: "+selecteddate.getDate()+"-"+(selecteddate.getMonth()+1)+"-"+selecteddate.getUTCFullYear()+" at "+selecteddate.getHours()+":"+(selecteddate.getMinutes()<10?'0':'') + selecteddate.getMinutes()+" to "+selectedEndTime.getHours()+":"+(selectedEndTime.getMinutes()<10?'0':'')+selectedEndTime.getMinutes();
   }
     else if(document.getElementById(this.id).innerHTML == "Available")
@@ -441,6 +471,7 @@ function calendarfn() {
       BorUB=2;
       currentid=this.id;
       var iddate=parseInt(currentid[2]);
+      myDate=new Date("{{currentDate}}");
       selecteddate.setDate(myDate.getDate() + iddate);
       if(checktut==0){
       if(parseInt(currentid[3])==5)
@@ -448,10 +479,13 @@ function calendarfn() {
       else {selectedmins=0;}}
       else {selectedmins=0;}
       selecteddate.setHours(parseInt((parseInt(currentid[1]))+8)); selecteddate.setMinutes(selectedmins);
-      selectedEndTime.setDate(selecteddate.getDate()); selectedEndTime.setHours(selecteddate.getHours());
+      selectedEndTime.setDate(selecteddate.getDate());
+      selectedEndTime.setHours(selecteddate.getHours());
       if(checktut==0){selectedEndTime.setMinutes(selecteddate.getMinutes()+30);}
       else {selectedEndTime.setMinutes(selecteddate.getMinutes()+60);}
+
       blockSession(BorUB);
+      //document.getElementById('bookbtn').innerHTML="Hi";
       //document.getElementById('selected').innerHTML = "Selected Slot: "+selecteddate.getDate()+"-"+(selecteddate.getMonth()+1)+"-"+selecteddate.getUTCFullYear()+" at "+selecteddate.getHours()+":"+(selecteddate.getMinutes()<10?'0':'') + selecteddate.getMinutes()+" to "+selectedEndTime.getHours()+":"+(selectedEndTime.getMinutes()<10?'0':'')+selectedEndTime.getMinutes();
   }
 
@@ -460,13 +494,17 @@ var URL = "{% url 'main:blockSuccess' %}";
 function blockSession(decision){
 
   //document.getElementById('bookbtn').innerHTML = "GAYSEX";
-
+  if(weekno==2)
+  {
+   selecteddate.setDate(selecteddate.getDate() + 7);
+  }
 var bookeddate=selecteddate;
 var senddate=selecteddate.getUTCFullYear()+"-"+(selecteddate.getMonth()+1)+"-"+selecteddate.getDate();
 var sendtime=selecteddate.getHours()+":"+(selecteddate.getMinutes()<10?'0':'') + selecteddate.getMinutes();
 var endingTime=selectedEndTime.getHours()+":"+(selectedEndTime.getMinutes()<10?'0':'')+selectedEndTime.getMinutes();
-document.getElementById('bookbtn').innerHTML = decision;
-
+//document.getElementById('bookbtn').innerHTML=sendtime;
+//document.getElementById('bookbtn').innerHTML=selecteddate;
+//document.getElementById('bookbtn').innerHTML = selecteddate;
     var data = {
     'blockeddate': senddate,
     'startTime': sendtime,

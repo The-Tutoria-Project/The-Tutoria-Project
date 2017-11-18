@@ -204,20 +204,11 @@
 </div>
 
 
-<br><br>
-<h4 id="selected"></h4>
-<h4 id="payment"></h4>
-
 <br>
+<p id="selected"></p>
+<p id="payment"></p>
 
 
-
-
-<select name="slot_id">
-{% for entry in slots %}
-    <option value="{{ entry.id }}"> {{entry.date }}, {{ entry.startTime }} - {{ entry.endTime}}</option>
-{% endfor %}
-</select>
 
 <button id='bookbtn' class="w3-bar-item w3-button w3-round-xxlarge w3-padding-large w3-margin-left w3-pink w3-xlarge w3-hover-teal w3-center" onclick="bookSession()"> Book </button>
 
@@ -272,7 +263,7 @@ else {
 
 {% for entry in slots %}
 
-var val="{{ entry.startTime }} {{ entry.endTime}}";
+var val="{{ entry.startTime|time:'H:i' }} {{ entry.endTime|time:'H:i'}}";
 var myDate1 = new Date("{{entry.date}}");
 myDate = new Date(curdString);
 
@@ -283,7 +274,13 @@ var s1=myDate1.getDate();
 var s2=curd1.getDate();
 if( s1.valueOf() === s2.valueOf())
 {
+  // if(val[0]=="9")
+  // {
+  //   val[0]="0";val[1]="9";val[3]=val[2];
+  // }
+  
   var tempo = val[0]+val[1];
+
   var timecur= parseInt(tempo) - 9;
   if(timecur>0 && val[3]==3)
   {

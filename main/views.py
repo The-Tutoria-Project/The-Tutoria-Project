@@ -242,7 +242,7 @@ def confirmedBooking(request):
 
         bookedDate = datetime.strptime(bookeddate_str, '%Y-%m-%d').date()
         bookedStartTime = datetime.strptime(startTime_str, '%H:%M').time()
-        bookedEndTime = datetime.strptime(startTime_str, '%H:%M').time()
+        bookedEndTime = datetime.strptime(endTime_str, '%H:%M').time()
 
         print(bookedStartTime)
         print(current_user.id)
@@ -317,13 +317,17 @@ def blockSuccess(request):
 
         availDate = datetime.strptime(bookeddate_str, '%Y-%m-%d').date()
         availStartTime = datetime.strptime(startTime_str, '%H:%M').time()
-        availEndTime = datetime.strptime(startTime_str, '%H:%M').time()
-
+        availEndTime = datetime.strptime(endTime_str, '%H:%M').time()
+        print(availStartTime)
         if decision == "2": #block
 
-            Availability.objects.create(tutor=tutor, date=availDate, startTime=availStartTime, endTime=availEndTime)
-            return HttpResponse('success')
+            try:
+                Availability.objects.create(tutor=tutor, date=availDate, startTime=availStartTime, endTime=availEndTime)
+                print("created")
+                return HttpResponse('success')
 
+            except:
+                print("Error")
 
         elif decision == "1":
             unblockSlot = Availability.objects.get(tutor=tutor, date=availDate, startTime=availStartTime, endTime=availEndTime)

@@ -102,7 +102,6 @@ class Availability(models.Model): #blocked slots
     # weekday = models.PositiveSmallIntegerField(choices=WEEKDAY_CHOICES)
     startTime = models.TimeField()
     endTime = models.TimeField()
-    isAvailable = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = "Availabilities"
