@@ -486,17 +486,25 @@ var endingTime=selectedEndTime.getHours()+":"+(selectedEndTime.getMinutes()<10?'
 //document.getElementById('bookbtn').innerHTML = senddate;
 if(document.getElementById('selected').innerHTML != "Selected Slot: None"){// Checking inner html of selected instead of NULL
 
+
+  var ask = window.confirm("Are you sure you want to book this session?");
+      if (ask) {
+        var amt1=parseFloat("{{tutor.hourly_rate}}")*1.05;
     var data = {
-  
+
     'bookeddate': senddate,
     'startTime': sendtime,
     'endTime': endingTime,
     'tutID': sendTutorID,
     'csrfmiddlewaretoken': '{{ csrf_token }}'};
     $.post(URL, data, function(response){
-        if(response === 'success'){ alert('Booking is a success'); }
+        if(response === 'success'){ alert("You have booked your session with {{ tutor.firstName}}  {{ tutor.lastName}}. The fee for this session is HKD"+amt1); window.location.reload(false); window.location.replace("{% url 'main:home-page' %}");}
         else{ alert('Error! :('); }
     });
+
+}
+
+
 }
 else {
   alert("Please select a slot to book from the table");
@@ -505,12 +513,7 @@ else {
 
 </script>
 <script>
-function myFunction() {
-   var a="{{ tutor.firstName}}  {{ tutor.lastName}}";
-   var amt = "{{ tutor.hourly_rate}}";
-   var bal = "{{balance.wallet}}";
-   alert("You have booked your session with "+a +". The fee for this session is HKD"+amt + ". Your balance amount is HKD" + bal);
-}
+
 </script>
 <script>
 var checktut="{{ tutor.tutorType }}";

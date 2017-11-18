@@ -220,6 +220,7 @@ def bookSession(request):
 
     return render(request, 'main/session.html', {'slots': slot, 'tutor': tutor, 'balance': sid, 'currentDate': currentDate, 'currentTime': currentTime, 'sessions':sessions})
 
+@login_required
 def confirmedBooking(request):
 
     if request.method == 'POST':
@@ -234,7 +235,7 @@ def confirmedBooking(request):
         currentTime = str(datetime.now().hour) + ":" + str(datetime.now().minute)
         syswallet = SystemWallet.objects.get()
         sessions = Sessions.objects.filter(tutorID=tutorID)
-        
+
         bookeddate_str = request.POST['bookeddate']
         startTime_str = request.POST['startTime']
         endTime_str = request.POST['endTime']
@@ -286,6 +287,48 @@ def confirmedBooking(request):
     #
     #
     # return render(request, self.template_name, {'slots': slot})
+
+def tutorSchedule(request):
+
+    current_user = request.user
+    print(current_user)
+    tutor = Tutor.objects.get(user=current_user)  # get tutor object
+    slot = Availability.objects.filter(tutor=tutor) #blocked slots
+    # wallet = Wallet.objects.get(user=sid.user)
+    currentDate = str(datetime.today().date());
+    currentTime = str(datetime.now().hour) + ":" + str(datetime.now().minute)
+    syswallet = SystemWallet.objects.get()
+    sessions = Sessions.objects.filter(tutorID=tutor.id)
+
+    return render(request, 'main/WelcomeTutor.html', {'slots': slot, 'tutor': tutor, 'currentDate': currentDate, 'currentTime': currentTime, 'sessions':sessions})
+
+def blockSuccess(request):
+
+
+    if request.method == 'POST':
+        current_user = request.user
+        tutor = Tutor.objects.get(user=current_user)  # get tutor object
+
+        bookeddate_str = request.POST['blockeddate']
+        startTime_str = request.POST['startTime']
+        endTime_str = request.POST['endTime']
+        decision = request.POST['decision']
+
+
+        availDate = datetime.strptime(bookeddate_str, '%Y-%m-%d').date()
+        availStartTime = datetime.strptime(startTime_str, '%H:%M').time()
+        availEndTime = datetime.strptime(startTime_str, '%H:%M').time()
+
+        if decision == "2": #block
+
+            Availability.objects.create(tutor=tutor, date=availDate, startTime=availStartTime, endTime=availEndTime)
+            return HttpResponse('success')
+
+
+        elif decision == "1":
+            unblockSlot = Availability.objects.get(tutor=tutor, date=availDate, startTime=availStartTime, endTime=availEndTime)
+            unblockSlot.delete()
+            return HttpResponse('success')
 
 @login_required
 def mySessions(request):

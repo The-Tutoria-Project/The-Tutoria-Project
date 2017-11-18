@@ -8,7 +8,7 @@
   <ul>
 
     <li>
-      Availability for the next 7 days <br>
+      Set availability for the next 14 days <br>
       <span style="font-size:18px">for {{ tutor.firstName}} {{ tutor.lastName}}  </span>
     </li>
   </ul>
@@ -204,23 +204,10 @@
 </ul>
 </div>
 
-
-<br><br>
 <h4 id="selected"></h4>
-<h4 id="payment"></h4>
-
 <br>
 
-
-
-
-<select name="slot_id">
-{% for entry in slots %}
-    <option value="{{ entry.id }}"> {{entry.date }}, {{ entry.startTime }} - {{ entry.endTime}}</option>
-{% endfor %}
-</select>
-
-<button id='bookbtn' class="w3-bar-item w3-button w3-round-xxlarge w3-padding-large w3-margin-left w3-pink w3-xlarge w3-hover-teal w3-center" onclick="bookSession()"> Book </button>
+<button id='bookbtn' class="w3-bar-item w3-button w3-round-xxlarge w3-padding-large w3-margin-left w3-pink w3-xlarge w3-hover-teal w3-center" onclick=""> Done</button>
 
 
 
@@ -230,8 +217,6 @@
 </script>
 
 <script>
-document.getElementById('selected').innerHTML="Selected Slot: None";
-document.getElementById('payment').innerHTML="Payment Amount: None";
 var curdString="{{currentDate}}";
 var curt="{{currentTime}}";
 var myDate = new Date(curdString);
@@ -333,16 +318,16 @@ if( s1.valueOf() === s2.valueOf())
   id= (timecur+1)*10 + j;
   var a="s"+id+"5";
   //document.getElementById('s44').innerHTML = id;
-  document.getElementById(a).innerHTML = "Blocked";
-  document.getElementById(a).className="blocked";
+  document.getElementById(a).innerHTML = "Booked";
+  document.getElementById(a).className="booked";
   }
   else if(timecur>0)
   {
   id= (timecur+1)*10 + j;
   var a="s"+id;
   //document.getElementById('s44').innerHTML = id;
-  document.getElementById(a).innerHTML = "Blocked";
-  document.getElementById(a).className="blocked";
+  document.getElementById(a).innerHTML = "Booked";
+  document.getElementById(a).className="booked";
 
   }
 }
@@ -422,61 +407,57 @@ var currentid;
 var selecteddate=new Date();
 var selectedStarttime;
 var selectedmins;
+var BorUB=0;
 var selectedEndTime=new Date();
 //document.getElementById("payment").innerHTML == "HI";
 function calendarfn() {
   //document.getElementById('s66').innerHTML="Hi";
-  if(document.getElementById(this.id).className == "active")
+  if(document.getElementById(this.id).innerHTML == "Blocked")
   {
-    selected=0; document.getElementById(this.id).className="available";
-    document.getElementById('selected').innerHTML="Selected Slot: None";
-    document.getElementById('payment').innerHTML="Payment Amount: None";
-    selecteddate=NULL;
-    selectedEndTime=NULL;
-
+    document.getElementById(this.id).innerHTML = "Available"
+    document.getElementById(this.id).className="available";
+    //Here UnblockSession()
+    BorUB=1;
+    currentid=this.id;
+    var iddate=parseInt(currentid[2]);
+    selecteddate.setDate(myDate.getDate() + iddate);
+    if(checktut==0){
+    if(parseInt(currentid[3])==5)
+    {selectedmins=30;}
+    else {selectedmins=0;}}
+    else {selectedmins=0;}
+    selecteddate.setHours(parseInt((parseInt(currentid[1]))+8)); selecteddate.setMinutes(selectedmins);
+    selectedEndTime.setDate(selecteddate.getDate()); selectedEndTime.setHours(selecteddate.getHours());
+    if(checktut==0){selectedEndTime.setMinutes(selecteddate.getMinutes()+30);}
+    else {selectedEndTime.setMinutes(selecteddate.getMinutes()+60);}
+    blockSession(BorUB);
+    //document.getElementById('selected').innerHTML = "Selected Slot: "+selecteddate.getDate()+"-"+(selecteddate.getMonth()+1)+"-"+selecteddate.getUTCFullYear()+" at "+selecteddate.getHours()+":"+(selecteddate.getMinutes()<10?'0':'') + selecteddate.getMinutes()+" to "+selectedEndTime.getHours()+":"+(selectedEndTime.getMinutes()<10?'0':'')+selectedEndTime.getMinutes();
   }
-  else
-  {
-    if(document.getElementById(this.id).innerHTML == "Available" && selected==0)
+    else if(document.getElementById(this.id).innerHTML == "Available")
     {
-      selected=1; document.getElementById(this.id).className = "active";
-
-
+      document.getElementById(this.id).className = "blocked";
+      document.getElementById(this.id).innerHTML = "Blocked";
+      //Here BlockSession()
+      BorUB=2;
       currentid=this.id;
       var iddate=parseInt(currentid[2]);
-
       selecteddate.setDate(myDate.getDate() + iddate);
-      //document.getElementById('s66').innerHTML=selecteddate.getDate();
-
       if(checktut==0){
       if(parseInt(currentid[3])==5)
       {selectedmins=30;}
-      else {
-        selectedmins=0;
-      }
-    }
-    else {
-      selectedmins=0;
-    }
+      else {selectedmins=0;}}
+      else {selectedmins=0;}
+      selecteddate.setHours(parseInt((parseInt(currentid[1]))+8)); selecteddate.setMinutes(selectedmins);
+      selectedEndTime.setDate(selecteddate.getDate()); selectedEndTime.setHours(selecteddate.getHours());
+      if(checktut==0){selectedEndTime.setMinutes(selecteddate.getMinutes()+30);}
+      else {selectedEndTime.setMinutes(selecteddate.getMinutes()+60);}
+      blockSession(BorUB);
+      //document.getElementById('selected').innerHTML = "Selected Slot: "+selecteddate.getDate()+"-"+(selecteddate.getMonth()+1)+"-"+selecteddate.getUTCFullYear()+" at "+selecteddate.getHours()+":"+(selecteddate.getMinutes()<10?'0':'') + selecteddate.getMinutes()+" to "+selectedEndTime.getHours()+":"+(selectedEndTime.getMinutes()<10?'0':'')+selectedEndTime.getMinutes();
+  }
 
-    selecteddate.setHours(parseInt((parseInt(currentid[1]))+8));
-    selecteddate.setMinutes(selectedmins);
-    selectedEndTime.setDate(selecteddate.getDate());
-    selectedEndTime.setHours(selecteddate.getHours());
-    if(checktut==0){
-    selectedEndTime.setMinutes(selecteddate.getMinutes()+30);
-    }
-  else {
-    selectedEndTime.setMinutes(selecteddate.getMinutes()+60);
-  }
-    document.getElementById('payment').innerHTML = "Payment Amount: HKD "+parseFloat("{{tutor.hourly_rate}}")*1.05+"";
-    document.getElementById('selected').innerHTML = "Selected Slot: "+selecteddate.getDate()+"-"+(selecteddate.getMonth()+1)+"-"+selecteddate.getUTCFullYear()+" at "+selecteddate.getHours()+":"+(selecteddate.getMinutes()<10?'0':'') + selecteddate.getMinutes()+" to "+selectedEndTime.getHours()+":"+(selectedEndTime.getMinutes()<10?'0':'')+selectedEndTime.getMinutes();
-    }
-  }
 }
-
-var URL = "{% url 'main:session' %}";
-function bookSession(){
+var URL = "{% url 'main:blockSuccess' %}";
+function blockSession(decision){
 
   //document.getElementById('bookbtn').innerHTML = "GAYSEX";
 
@@ -484,23 +465,19 @@ var bookeddate=selecteddate;
 var senddate=selecteddate.getUTCFullYear()+"-"+(selecteddate.getMonth()+1)+"-"+selecteddate.getDate();
 var sendtime=selecteddate.getHours()+":"+(selecteddate.getMinutes()<10?'0':'') + selecteddate.getMinutes();
 var endingTime=selectedEndTime.getHours()+":"+(selectedEndTime.getMinutes()<10?'0':'')+selectedEndTime.getMinutes();
-//document.getElementById('bookbtn').innerHTML = senddate;
-if(document.getElementById('selected').innerHTML != "Selected Slot: None"){// Checking inner html of selected instead of NULL
+document.getElementById('bookbtn').innerHTML = decision;
 
     var data = {
-    'bookeddate': senddate,
+    'blockeddate': senddate,
     'startTime': sendtime,
     'endTime': endingTime,
     'tutID': sendTutorID,
+    'decision': decision,
     'csrfmiddlewaretoken': '{{ csrf_token }}'};
     $.post(URL, data, function(response){
-        if(response === 'success'){ alert('Booking is a success'); }
+        if(response === 'success'){ alert('Success!'); location.reload(); }
         else{ alert('Error! :('); }
     });
-}
-else {
-  alert("Please select a slot to book from the table");
-}
 }
 
 </script>
@@ -513,16 +490,21 @@ function myFunction() {
 }
 </script>
 <script>
-var checktut="{{ tutor.tutorType }}";
-for (var i = 1; i <= 7; i++) {
-  for (var j = 1; j <= 8; j++) {
-    var g="s"+j+i;
-    var g1="s"+j+i+"5";
-    document.getElementById(g).addEventListener("click",calendarfn);
-    if(checktut.valueOf() == 0){
-      document.getElementById(g1).addEventListener("click",calendarfn);
-    }
-  }}
+
+
+$(document).ready(function(){
+  var checktut="{{ tutor.tutorType }}";
+  for (var i = 1; i <= 7; i++) {
+    for (var j = 1; j <= 8; j++) {
+      var g="s"+j+i;
+      var g1="s"+j+i+"5";
+      document.getElementById(g).addEventListener("click",calendarfn);
+      if(checktut.valueOf() == 0){
+        document.getElementById(g1).addEventListener("click",calendarfn);
+      }
+    }}
+});
+
 </script>
 
 {% endblock %}

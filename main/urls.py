@@ -26,7 +26,8 @@ urlpatterns = [
     # url(r'^studentRegistration/$', views.studentRegistration, name='studentRegistration'),
     # url(r'^account/', include('django.contrib.auth.urls')),
 
-
+    url(r'^tutorSchedule/$', views.tutorSchedule, name='tutorSchedule'),
+    url(r'^blockSuccess/$', views.blockSuccess, name='blockSuccess'),
     url(r'^user_login/$', views.user_login, name='user_login'),
     url(r'^tutor_login/$', views.user_login1, name='tutor_login'),
     url(r'^confirmedBooking/$', views.confirmedBooking, name='confirmedBooking'),
