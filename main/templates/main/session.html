@@ -274,15 +274,9 @@ var s1=myDate1.getDate();
 var s2=curd1.getDate();
 if( s1.valueOf() === s2.valueOf())
 {
-  // if(val[0]=="9")
-  // {
-  //   val[0]="0";val[1]="9";val[3]=val[2];
-  // }
-  
   var tempo = val[0]+val[1];
-
   var timecur= parseInt(tempo) - 9;
-  if(timecur>0 && val[3]==3)
+  if(timecur>=0 && val[3]==3)
   {
   id= (timecur+1)*10 + j;
   var a="s"+id+"5";
@@ -290,7 +284,7 @@ if( s1.valueOf() === s2.valueOf())
   document.getElementById(a).innerHTML = "Blocked";
   document.getElementById(a).className="blocked";
   }
-  else if(timecur>0)
+  else if(timecur>=0)
   {
   id= (timecur+1)*10 + j;
   var a="s"+id;
@@ -324,7 +318,7 @@ if( s1.valueOf() === s2.valueOf())
 {
   var tempo = val[0]+val[1];
   var timecur= parseInt(tempo) - 9;
-  if(timecur>0 && val[3]==3)
+  if(timecur>=0 && val[3]==3)
   {
   id= (timecur+1)*10 + j;
   var a="s"+id+"5";
@@ -332,7 +326,7 @@ if( s1.valueOf() === s2.valueOf())
   document.getElementById(a).innerHTML = "Blocked";
   document.getElementById(a).className="blocked";
   }
-  else if(timecur>0)
+  else if(timecur>=0)
   {
   id= (timecur+1)*10 + j;
   var a="s"+id;
@@ -440,7 +434,7 @@ function calendarfn() {
 
       currentid=this.id;
       var iddate=parseInt(currentid[2]);
-
+      myDate = new Date(curdString);
       selecteddate.setDate(myDate.getDate() + iddate);
       //document.getElementById('s66').innerHTML=selecteddate.getDate();
 

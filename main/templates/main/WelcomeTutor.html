@@ -2,7 +2,6 @@
 {% extends 'main/baseapp.html' %}
 {% block body_block %}
 
-
 <br> <br>
 <div class="month">
   <ul>
@@ -272,6 +271,7 @@ else {
 {% for entry in slots %}
 
 var val="{{ entry.startTime|time:'H:i'}} {{ entry.endTime|time:'H:i'}}";
+
 var myDate1 = new Date("{{entry.date}}");
 //myDate = new Date(curdString);
 for (j = 1; j <= 7; j++) {
@@ -283,7 +283,8 @@ if( s1.valueOf() === s2.valueOf())
 {
   var tempo = val[0]+val[1];
   var timecur= parseInt(tempo) - 9;
-  if(timecur>0 && val[3]==3)
+  //document.getElementById('debug').innerHTML = timecur;
+  if(timecur>=0 && val[3]==3)
   {
   id= (timecur+1)*10 + j;
   var a="s"+id+"5";
@@ -291,7 +292,7 @@ if( s1.valueOf() === s2.valueOf())
   document.getElementById(a).innerHTML = "Blocked";
   document.getElementById(a).className="blocked";
   }
-  else if(timecur>0)
+  else if(timecur>=0)
   {
   id= (timecur+1)*10 + j;
   var a="s"+id;
@@ -325,7 +326,7 @@ if( s1.valueOf() === s2.valueOf())
 {
   var tempo = val[0]+val[1];
   var timecur= parseInt(tempo) - 9;
-  if(timecur>0 && val[3]==3)
+  if(timecur>=0 && val[3]==3)
   {
   id= (timecur+1)*10 + j;
   var a="s"+id+"5";
@@ -333,7 +334,7 @@ if( s1.valueOf() === s2.valueOf())
   document.getElementById(a).innerHTML = "Booked";
   document.getElementById(a).className="booked";
   }
-  else if(timecur>0)
+  else if(timecur>=0)
   {
   id= (timecur+1)*10 + j;
   var a="s"+id;
