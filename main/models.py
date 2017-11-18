@@ -133,31 +133,21 @@ class Sessions(models.Model):
 
     studentID = models.ForeignKey(Student)
     tutorID = models.ForeignKey(Tutor)
-    bookedTime = models.ForeignKey(
-        Availability, related_name='sessionKey', null=True)
+    bookedDate = models.DateField(null=True)
+    bookedStartTime = models.TimeField(null=True)
+    bookedEndTime = models.TimeField(null=True)
     sessionAmount = models.DecimalField(max_digits=8, decimal_places=2)
     systemWallet = models.ForeignKey(SystemWallet)
 
     def __str__(self):
-        return self.studentID.firstName + " " + str(self.bookedTime.startTime) + " " + self.tutorID.firstName
+        return self.studentID.firstName + " " + str(self.bookedDate) + " " + self.tutorID.firstName
 
     class Meta:
         verbose_name_plural = "Sessions"
-        unique_together = (("studentID", "tutorID", "bookedTime"))
+        unique_together = (("studentID", "tutorID", "bookedDate", "bookedStartTime", "bookedEndTime"))
 
     def validate_unique(self, exclude=None):
         check = Sessions.objects.filter(studentID=self.studentID)
-
-        # Student cannot book a session starting at same time
-        if check.filter(bookedTime__startTime=self.bookedTime.startTime).exists():
-            raise ValidationError('Another session starting at same time')
-
-        # Student cannot book a session ending at same time
-        if check.filter(bookedTime__endTime=self.bookedTime.endTime).exists():
-            raise ValidationError('Another session ending at same time')
-
-        # if check.filter(bookedTime__weekday=self.bookedTime.weekday).exists() and check.filter(tutorID=self.tutorID).exists(): #Student cannot book a session ending at same time
-        #     raise ValidationError('Already one session with this tutor today')
 
     def save(self, *args, **kwargs):
 

@@ -207,58 +207,85 @@ class TutorUpdateView(UpdateView):
 @login_required
 def bookSession(request):
 
-    if request.method == 'POST':
-        bookeddate = request.POST['bookeddate']
-        print(bookeddate)
-        return HttpResponse('success')
-
     current_user = request.user
-    print(current_user.id)
-    # basically if there is a post request take that student_id, tutor id and time slot and save it in session.
-    form = request.POST
     tutorID = request.GET["value1"]
-
     sid = Student.objects.get(user=current_user)
-
     tutor = Tutor.objects.get(id=tutorID)  # get tutor object
-
-    slot = Availability.objects.filter(tutor_id=tutorID, isAvailable=True)
+    slot = Availability.objects.filter(tutor_id=tutorID)
     wallet = Wallet.objects.get(user=sid.user)
-
     currentDate = str(datetime.today().date());
     currentTime = str(datetime.now().hour) + ":" + str(datetime.now().minute)
     syswallet = SystemWallet.objects.get()
     sessions = Sessions.objects.filter(tutorID=tutorID)
 
-
-
-
-
-    if not slot:
-        return HttpResponse('<em> Oops! This Tutor has no available time slots </em>')
-
-    else:
-        if request.method == 'POST':
-            selectedSlot = get_object_or_404(Availability, pk=request.POST.get(
-                'slot_id'))  # get user's selected slot from the drop down
-
-            try:
-                Sessions_instance = Sessions.objects.create(
-                    tutorID=tutor, studentID=sid, bookedTime=selectedSlot, sessionAmount=tutor.hourly_rate, systemWallet=syswallet)  # add the new session to the db table
-                selectedSlot.isAvailable = False  # make the slot unavailable
-                selectedSlot.save()  # save the slot
-                sessionAmount =  (float)(tutor.hourly_rate) + (float)(tutor.hourly_rate)*(0.05)
-                #wallet.amount -= sessionAmount
-                #still stuff to do
-                #print(balance)
-                return render(request, 'main/home.html', {})
-                # return HttpResponse("Your Session is Successfully Booked!")
-
-            except ValidationError as e:
-                return JsonResponse({'status': 'false', 'message': 'You have another session at the same time or already have a session with this tutor today!'}, status=500)
-    # return render(request, self.template_name, {'slots': slot})
     return render(request, 'main/session.html', {'slots': slot, 'tutor': tutor, 'balance': sid, 'currentDate': currentDate, 'currentTime': currentTime, 'sessions':sessions})
 
+def confirmedBooking(request):
+
+    if request.method == 'POST':
+        current_user = request.user
+        tutorID = request.POST['tutID']
+        tutor = Tutor.objects.get(id=tutorID)
+        sid = Student.objects.get(user=current_user)
+
+        slot = Availability.objects.filter(tutor_id=tutorID)
+        wallet = Wallet.objects.get(user=sid.user)
+        currentDate = str(datetime.today().date());
+        currentTime = str(datetime.now().hour) + ":" + str(datetime.now().minute)
+        syswallet = SystemWallet.objects.get()
+        sessions = Sessions.objects.filter(tutorID=tutorID)
+        
+        bookeddate_str = request.POST['bookeddate']
+        startTime_str = request.POST['startTime']
+        endTime_str = request.POST['endTime']
+
+        bookedDate = datetime.strptime(bookeddate_str, '%Y-%m-%d').date()
+        bookedStartTime = datetime.strptime(startTime_str, '%H:%M').time()
+        bookedEndTime = datetime.strptime(startTime_str, '%H:%M').time()
+
+        print(bookedStartTime)
+        print(current_user.id)
+        # basically if there is a post request take that student_id, tutor id and time slot and save it in session.
+        #form = request.POST
+
+        slot = Availability.objects.filter(tutor_id=tutorID)
+        wallet = Wallet.objects.get(user=sid.user)
+
+        currentDate = str(datetime.today().date());
+        currentTime = str(datetime.now().hour) + ":" + str(datetime.now().minute)
+        syswallet = SystemWallet.objects.get()
+        sessions = Sessions.objects.filter(tutorID=tutorID)
+        print(sessions)
+
+        try:
+            Sessions_instance = Sessions.objects.create(
+                tutorID=tutor, studentID=sid, bookedDate=bookedDate, bookedStartTime=bookedStartTime, bookedEndTime=bookedEndTime, sessionAmount=tutor.hourly_rate, systemWallet=syswallet)  # add the new session to the db table
+            # selectedSlot.isAvailable = False  # make the slot unavailable
+            # selectedSlot.save()  # save the slot
+            sessionAmount =  (float)(tutor.hourly_rate) + (float)(tutor.hourly_rate)*(0.05)
+            #wallet.amount -= sessionAmount
+            #still stuff to do
+            #print(balance)
+            return HttpResponse('success')
+            return render(request, 'main/home.html', {})
+            # return HttpResponse("Your Session is Successfully Booked!")
+
+        except ValidationError as e:
+            return JsonResponse({'status': 'false', 'message': 'You have another session at the same time or already have a session with this tutor today!'}, status=500)
+        return HttpResponse("Confirmed!")
+
+
+
+    # if not slot:
+    #     return HttpResponse('<em> Oops! This Tutor has no available time slots </em>')
+
+    # else:
+    #     if request.method == 'POST':
+    #         selectedSlot = get_object_or_404(Availability, pk=request.POST.get(
+    #             'slot_id'))  # get user's selected slot from the drop down
+    #
+    #
+    # return render(request, self.template_name, {'slots': slot})
 
 @login_required
 def mySessions(request):
@@ -275,8 +302,7 @@ def mySessions(request):
         print(request.POST.get('bookedSlots_id'))
         slotToCancel = get_object_or_404(
             Sessions, pk=request.POST.get('bookedSlots_id'))
-        Availability.objects.filter(sessionKey__bookedTime=slotToCancel.bookedTime,
-                                    tutor_id=slotToCancel.tutorID, isAvailable=False).update(isAvailable=True)
+
 
         slotToCancel.delete()
         return render(request, 'main/home.html', {})
@@ -326,7 +352,7 @@ def myWallet(request):
         walletForm = AddToWallet()
 
     tminus30days = datetime.today() - timedelta(days=30)
-    transactionList = Sessions.objects.filter(studentID= student, bookedTime__date__gt=tminus30days)
+    transactionList = "Hi"
 
 
 

@@ -206,7 +206,7 @@
 
 <br><br>
 <h4 id="selected"></h4>
-<h4 id="payamt"></h4>
+<h4 id="payment"></h4>
 
 <br>
 
@@ -229,7 +229,8 @@
 </script>
 
 <script>
-
+document.getElementById('selected').innerHTML="Selected Slot: None";
+document.getElementById('payment').innerHTML="Payment Amount: None";
 var curdString="{{currentDate}}";
 var curt="{{currentTime}}";
 var myDate = new Date(curdString);
@@ -255,7 +256,9 @@ for (i = 1; i <= 7; i++) {
   var g="s"+j+i;
   var g1="s"+j+i+"5";
   document.getElementById(g).innerHTML = "Available";
+  document.getElementById(g).className="available";
   document.getElementById(g1).innerHTML = "Available";
+  document.getElementById(g1).className="available";
 }}
 }
 else {
@@ -263,6 +266,7 @@ else {
     for (j = 1; j <= 8; j++) {
     var g="s"+j+i;
     document.getElementById(g).innerHTML = "Available";
+    document.getElementById(g).className="available";
   }}
 }
 
@@ -287,6 +291,7 @@ if( s1.valueOf() === s2.valueOf())
   var a="s"+id+"5";
   //document.getElementById('s44').innerHTML = id;
   document.getElementById(a).innerHTML = "Blocked";
+  document.getElementById(a).className="blocked";
   }
   else if(timecur>0)
   {
@@ -294,6 +299,7 @@ if( s1.valueOf() === s2.valueOf())
   var a="s"+id;
   //document.getElementById('s44').innerHTML = id;
   document.getElementById(a).innerHTML = "Blocked";
+  document.getElementById(a).className="blocked";
   }
 }
 }
@@ -301,10 +307,11 @@ if( s1.valueOf() === s2.valueOf())
 
 {% endfor %}
 
-{% for entry in sessions %}
+{% for session in sessions %}
 
-var val="{{ entry.bookedTime.startTime }} {{ entry.bookedTime.endTime}}";
-var myDate1 = new Date("{{entry.bookedTime.date}}");
+var val="{{session.bookedStartTime|time:'H:i'}}"
+
+var myDate1 = new Date("{{session.bookedDate}}");
 myDate = new Date(curdString);
 
 for (j = 1; j <= 7; j++) {
@@ -313,21 +320,29 @@ curd1.setDate(myDate.getDate() + j);
 var s1=myDate1.getDate();
 var s2=curd1.getDate();
 
-  //document.getElementById('s56').innerHTML = s1.valueOf();
+//document.getElementById('s56').innerHTML = val;
+
 
 if( s1.valueOf() === s2.valueOf())
 {
-
-  //document.getElementById('s44').innerHTML = "Bro";
   var tempo = val[0]+val[1];
   var timecur= parseInt(tempo) - 9;
-  //document.getElementById('s44').innerHTML = timecur;
-  if(timecur>0)
+  if(timecur>0 && val[3]==3)
+  {
+  id= (timecur+1)*10 + j;
+  var a="s"+id+"5";
+  //document.getElementById('s44').innerHTML = id;
+  document.getElementById(a).innerHTML = "Blocked";
+  document.getElementById(a).className="blocked";
+  }
+  else if(timecur>0)
   {
   id= (timecur+1)*10 + j;
   var a="s"+id;
   //document.getElementById('s44').innerHTML = id;
   document.getElementById(a).innerHTML = "Blocked";
+  document.getElementById(a).className="blocked";
+
   }
 }
 
@@ -343,27 +358,26 @@ if( s1.valueOf() === s2.valueOf())
 
 
 <script>
-var selected=0;
-
 var ctr=1;
 var timez=9;
 var checktut="{{ tutor.tutorType }}";
-
-
 for (var i = 1; i <= 7; i++) {
   for (var j = 1; j <= 8; j++) {
   var g="s"+j+i;
   var g1="s"+j+i+"5";
 
-    document.getElementById(g).addEventListener("click",calendarfn);
-if(checktut.valueOf() == 1 && ctr<16){//if private
+    //document.getElementById(g).addEventListener("click",calendarfn);
+    if(checktut.valueOf() == 1 && ctr<16){//if private
         document.getElementById(ctr.toString()).innerHTML="";ctr=ctr+2;
         document.getElementById((ctr-3).toString()).innerHTML= timez+":00 - "+(timez+1)+":00";timez++;
       }
       else{
         document.getElementById(g1).addEventListener("click",calendarfn);
       }
-}}
+}
+}
+</script>
+<script>
 //ELAPSED 24 Hr timez
 
 var a="{{currentTime}}";
@@ -373,59 +387,123 @@ for(var i=1;i<=8;i++){
   if((i+8)<parseInt(a[0]+a[1]))
   {
     document.getElementById(g).innerHTML="Elapsed";
+    document.getElementById(g).className="elapsed";
     if(checktut==0 && (a[3]>=3))
     {
       document.getElementById(g+"5").innerHTML="Elapsed";
+      document.getElementById(g).className="elapsed";
     }
 
   }
 }
 //Active Box
+</script>
+
+<script>
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+var sendTutorID = getParameterByName('value1')
 
 
+
+
+var checktut="{{ tutor.tutorType }}";
+var selected=0;
 var currentid;
 var selecteddate=new Date();
+var selectedStarttime;
+var selectedmins;
+var selectedEndTime=new Date();
+//document.getElementById("payment").innerHTML == "HI";
 function calendarfn() {
   //document.getElementById('s66').innerHTML="Hi";
   if(document.getElementById(this.id).className == "active")
   {
-    selected=0; document.getElementById(this.id).className="";
+    selected=0; document.getElementById(this.id).className="available";
+    document.getElementById('selected').innerHTML="Selected Slot: None";
+    document.getElementById('payment').innerHTML="Payment Amount: None";
+    selecteddate=NULL;
+    selectedEndTime=NULL;
+
   }
   else
   {
     if(document.getElementById(this.id).innerHTML == "Available" && selected==0)
     {
       selected=1; document.getElementById(this.id).className = "active";
+
+
       currentid=this.id;
-      var iddate=currentid[3];
+      var iddate=parseInt(currentid[2]);
+
       selecteddate.setDate(myDate.getDate() + iddate);
+      //document.getElementById('s66').innerHTML=selecteddate.getDate();
 
+      if(checktut==0){
+      if(parseInt(currentid[3])==5)
+      {selectedmins=30;}
+      else {
+        selectedmins=0;
+      }
+    }
+    else {
+      selectedmins=0;
+    }
 
-
-
-
+    selecteddate.setHours(parseInt((parseInt(currentid[1]))+8));
+    selecteddate.setMinutes(selectedmins);
+    selectedEndTime.setDate(selecteddate.getDate());
+    selectedEndTime.setHours(selecteddate.getHours());
+    if(checktut==0){
+    selectedEndTime.setMinutes(selecteddate.getMinutes()+30);
+    }
+  else {
+    selectedEndTime.setMinutes(selecteddate.getMinutes()+60);
+  }
+    document.getElementById('payment').innerHTML = "Payment Amount: HKD "+parseFloat("{{tutor.hourly_rate}}")*1.05+"";
+    document.getElementById('selected').innerHTML = "Selected Slot: "+selecteddate.getDate()+"-"+(selecteddate.getMonth()+1)+"-"+selecteddate.getUTCFullYear()+" at "+selecteddate.getHours()+":"+(selecteddate.getMinutes()<10?'0':'') + selecteddate.getMinutes()+" to "+selectedEndTime.getHours()+":"+(selectedEndTime.getMinutes()<10?'0':'')+selectedEndTime.getMinutes();
     }
   }
 }
 
-var URL = "{% url 'main:session' %}"
+var URL = "{% url 'main:confirmedBooking' %}";
 function bookSession(){
 
-  document.getElementById('bookbtn').innerHTML = "GAYSEX";
+  //document.getElementById('bookbtn').innerHTML = "GAYSEX";
 
-var bookeddate="{{currentDate}}";
+var bookeddate=selecteddate;
+var senddate=selecteddate.getUTCFullYear()+"-"+(selecteddate.getMonth()+1)+"-"+selecteddate.getDate();
+var sendtime=selecteddate.getHours()+":"+(selecteddate.getMinutes()<10?'0':'') + selecteddate.getMinutes();
+var endingTime=selectedEndTime.getHours()+":"+(selectedEndTime.getMinutes()<10?'0':'')+selectedEndTime.getMinutes();
+//document.getElementById('bookbtn').innerHTML = senddate;
+if(document.getElementById('selected').innerHTML != "Selected Slot: None"){// Checking inner html of selected instead of NULL
 
-    var data = {'bookeddate': bookeddate,
-  'csrfmiddlewaretoken': '{{ csrf_token }}'};
+    var data = {
+  
+    'bookeddate': senddate,
+    'startTime': sendtime,
+    'endTime': endingTime,
+    'tutID': sendTutorID,
+    'csrfmiddlewaretoken': '{{ csrf_token }}'};
     $.post(URL, data, function(response){
-        if(response === 'success'){ alert('Sex just happened!'); }
+        if(response === 'success'){ alert('Booking is a success'); }
         else{ alert('Error! :('); }
     });
-
 }
+else {
+  alert("Please select a slot to book from the table");
+}
+}
+
 </script>
-
-
 <script>
 function myFunction() {
    var a="{{ tutor.firstName}}  {{ tutor.lastName}}";
@@ -433,6 +511,18 @@ function myFunction() {
    var bal = "{{balance.wallet}}";
    alert("You have booked your session with "+a +". The fee for this session is HKD"+amt + ". Your balance amount is HKD" + bal);
 }
+</script>
+<script>
+var checktut="{{ tutor.tutorType }}";
+for (var i = 1; i <= 7; i++) {
+  for (var j = 1; j <= 8; j++) {
+    var g="s"+j+i;
+    var g1="s"+j+i+"5";
+    document.getElementById(g).addEventListener("click",calendarfn);
+    if(checktut.valueOf() == 0){
+      document.getElementById(g1).addEventListener("click",calendarfn);
+    }
+  }}
 </script>
 
 {% endblock %}

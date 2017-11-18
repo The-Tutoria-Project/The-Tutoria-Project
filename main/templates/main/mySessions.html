@@ -7,7 +7,7 @@
 
 <select name="bookedSlots_id">
 {% for entry in bookedSlots %}
-    <option value="{{ entry.id }}">{{ entry.bookedTime }}</option>
+    <option value="{{ entry.id }}">{{ entry.bookedDate }}</option>
 {% endfor %}
 </select>
 <input type="submit" value = "Cancel" class="w3-bar-item w3-button w3-round-xxlarge w3-padding-large w3-margin-left w3-pink w3-xlarge w3-hover-teal w3-center" onclick="myFunction()">

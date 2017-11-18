@@ -28,7 +28,7 @@ class TutorInfoForm(forms.ModelForm):
 class BookingForm(forms.ModelForm):
     class Meta():
         model = Sessions
-        fields = ('tutorID', 'studentID', 'bookedTime', )
+        fields = ('tutorID', 'studentID', 'bookedDate', 'bookedStartTime', 'bookedEndTime')
 
 class AddToWallet(forms.ModelForm):
     class Meta():
