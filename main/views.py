@@ -1,7 +1,7 @@
 import json
 
 
-from main.forms import UserForm, StudentInfoForm, BookingForm, TutorInfoForm, AddToWallet
+from main.forms import UserForm, StudentInfoForm, BookingForm, TutorInfoForm
 from . import models
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse
@@ -13,14 +13,15 @@ from django.views.generic import View, ListView, DetailView, TemplateView, Updat
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from main.models import Availability, Sessions, Student, Tutor, Course, Wallet, SystemWallet
+from main.models import Availability, Sessions, Student, Tutor, Course, SystemWallet, Transactions
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
-
+from django.contrib.sites.models import Site
 from django.http import JsonResponse, Http404
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import User
+from django.contrib import messages
 from datetime import datetime, timedelta
 
 
@@ -214,16 +215,16 @@ def bookSession(request):
 
     current_user = request.user
     tutorID = request.GET["value1"]
-    sid = Student.objects.get(user=current_user)
     tutor = Tutor.objects.get(id=tutorID)  # get tutor object
-    slot = Availability.objects.filter(tutor_id=tutorID)
-    wallet = Wallet.objects.get(user=sid.user)
+    student = Student.objects.get(user=current_user)  # student
+    slot = Availability.objects.filter(tutor_id=tutorID)  # blocked slots
+
     currentDate = str(datetime.today().date())
     currentTime = str(datetime.now().hour) + ":" + str(datetime.now().minute)
-    syswallet = SystemWallet.objects.get()
+
     sessions = Sessions.objects.filter(tutorID=tutorID)
 
-    return render(request, 'main/session.html', {'slots': slot, 'tutor': tutor, 'balance': sid, 'currentDate': currentDate, 'currentTime': currentTime, 'sessions': sessions})
+    return render(request, 'main/session.html', {'slots': slot, 'tutor': tutor, 'balance': student, 'currentDate': currentDate, 'currentTime': currentTime, 'sessions': sessions})
 
 
 @login_required
@@ -233,14 +234,12 @@ def confirmedBooking(request):
         current_user = request.user
         tutorID = request.POST['tutID']
         tutor = Tutor.objects.get(id=tutorID)
-        sid = Student.objects.get(user=current_user)
+        student = Student.objects.get(user=current_user)
 
         slot = Availability.objects.filter(tutor_id=tutorID)
-        wallet = Wallet.objects.get(user=sid.user)
         currentDate = str(datetime.today().date())
         currentTime = str(datetime.now().hour) + ":" + \
             str(datetime.now().minute)
-        syswallet = SystemWallet.objects.get()
         sessions = Sessions.objects.filter(tutorID=tutorID)
 
         bookeddate_str = request.POST['bookeddate']
@@ -254,30 +253,42 @@ def confirmedBooking(request):
         # print(bookedStartTime)
         # print(current_user.id)
         # basically if there is a post request take that student_id, tutor id and time slot and save it in session.
-        #form = request.POST
+        # form = request.POST
 
         slot = Availability.objects.filter(tutor_id=tutorID)
-        wallet = Wallet.objects.get(user=sid.user)
 
         currentDate = str(datetime.today().date())
         currentTime = str(datetime.now().hour) + ":" + \
             str(datetime.now().minute)
-        syswallet = SystemWallet.objects.get()
-        sessions = Sessions.objects.filter(tutorID=tutorID)
-        print(sessions)
+
+        sysWallet = Site.objects.get_current().systemwallet
+        sessionAmount = (float)(tutor.hourly_rate) * \
+            (1 + sysWallet.TUTORIA_COMMISSION)
 
         try:
-            Sessions_instance = Sessions.objects.create(
-                tutorID=tutor, studentID=sid, bookedDate=bookedDate, bookedStartTime=bookedStartTime, bookedEndTime=bookedEndTime, sessionAmount=tutor.hourly_rate, systemWallet=syswallet)  # add the new session to the db table
-            # selectedSlot.isAvailable = False  # make the slot unavailable
+            if((float)(student.wallet) - sessionAmount >= 0):
+                Sessions_instance = Sessions.objects.create(
+                    tutorID=tutor, studentID=student, bookedDate=bookedDate, bookedStartTime=bookedStartTime, bookedEndTime=bookedEndTime, sessionAmount=tutor.hourly_rate, systemWallet=syswallet)  # add the new session to the db table
+                sysWallet.systemBalance = (float)(
+                    sysWallet.systemBalance) + sessionAmount
+                sysWallet.save()
+                student.wallet = (float)(student.wallet) - sessionAmount
+                student.save()
+
+                transaction = Transactions.objects.create(user=student.user, transactionTime=datetime.now(
+                ), addedAmount=0, subtractedAmount=sessionAmount, details="Booked a " + str(Sessions_instance))
+
+            else:
+                print("error")
+                return HttpResponse("You dont have enough money for this :(")
+                # selectedSlot.isAvailable = False  # make the slot unavailable
             # selectedSlot.save()  # save the slot
-            sessionAmount = (float)(tutor.hourly_rate) + \
-                (float)(tutor.hourly_rate) * (0.05)
-            #wallet.amount -= sessionAmount
+            # wallet.amount -= sessionAmount
             # still stuff to do
             # print(balance)
+
             return HttpResponse('success')
-            return render(request, 'main/home.html', {})
+
             # return HttpResponse("Your Session is Successfully Booked!")
 
         except ValidationError as e:
@@ -306,7 +317,7 @@ def tutorSchedule(request):
         raise Http404("Sorry! You are not registered as a Tutor!")
 
     slot = Availability.objects.filter(tutor=tutor)  # blocked slots
-    # wallet = Wallet.objects.get(user=sid.user)
+    # wallet = Wallet.objects.get(user=student.user)
     currentDate = str(datetime.today().date())
     currentTime = str(datetime.now().hour) + ":" + str(datetime.now().minute)
     syswallet = SystemWallet.objects.get()
@@ -355,6 +366,7 @@ def mySessions(request):  # View your sessions and cancel them
     print(currentStudent.id)
     student = Student.objects.get(user=currentStudent)
     bookedSlots = Sessions.objects.filter(studentID_id=student.id)
+    sysWallet = Site.objects.get_current().systemwallet
 
     if not bookedSlots:
         return HttpResponse('<em> Oops! You have no sessions booked currently</em>')
@@ -374,9 +386,28 @@ def mySessions(request):  # View your sessions and cancel them
             if tomorrowSlot - nowSlot < timedelta(hours=24):
                 return HttpResponse('<em> Sorry! You cannot cancel a session less than 24 hours before it is scheduled.</em>')
 
+        # refund
+        refundAmount = (float)(slotToCancel.tutorID.hourly_rate) * (1.0 + (sysWallet.TUTORIA_COMMISSION))
+
+        # deduct from system
+        sysWallet.systemBalance = (float)(
+            sysWallet.systemBalance) - refundAmount
+        sysWallet.save()
+
+        # give to student
+        student.wallet = (float)(student.wallet) + refundAmount
+        student.save()
+
+        # make session available by deleting it
+        Transactions.objects.create(user=currentStudent, transactionTime=datetime.now(), addedAmount=refundAmount, subtractedAmount=0, details='Cancelled a '+str(slotToCancel))
+
         slotToCancel.delete()
 
-        return render(request, 'main/home.html', {})
+
+
+        message = "Your slot has been successfully deleted. An amount of HKD " + str(refundAmount) + " has been refunded to your wallet"
+
+        return render(request, 'main/mySessions.html', {'bookedSlots': bookedSlots, 'message': message})
     return render(request, 'main/mySessions.html', {'bookedSlots': bookedSlots})
 
 
@@ -391,9 +422,9 @@ def homePage(request):
 def search(request):
 
     if request.method == 'GET':
-        userText = request.GET.get('search_box')
+        userText=request.GET.get('search_box')
         print(userText)
-        search = Tutor.objects.filter(
+        search=Tutor.objects.filter(
             Q(firstName=userText) | Q(lastName=userText))
         print(search)
         return render(request, 'main/search.html', {'tutors': search})
@@ -401,31 +432,79 @@ def search(request):
     return render(request, 'main/search.html')
 
 
-def myWallet(request):
+def tutorWallet(request):
 
-    currentUser = request.user
-    wallet = Wallet.objects.get(user=currentUser)
-    student = Student.objects.get(user=currentUser)
+    currentUser=request.user
+    tutor=get_object_or_404(Tutor, user = currentUser)
+    #transaction for 30 days only
+    transactionList=Transactions.objects.filter(user = currentUser).exclude(transactionTime__lt=(datetime.now().date() - timedelta(days=30)))
+    print(transactionList)
 
-    if request.method == "POST":
 
-        walletForm = AddToWallet(data=request.POST)
+    if request.method == 'POST':
+        amount=request.POST.get("amount")
 
-        if walletForm.is_valid():
+        tutor.wallet=(float)(tutor.wallet) + amount
+        try:
+            tutor.save()
 
-            wallet.amount += walletForm.cleaned_data['amount']
-            wallet.save()
+            Transactions.objects.create(user=currentUser, transactionTime=datetime.now(), addedAmount=0, subtractedAmount=amount, details='Transferred money from wallet')
 
-        else:
-            print(walletForm.errors)
+            successmsg='Successfully transferred HKD' + amountstr + " from your wallet!"
+            return render(request, 'main/tutorWallet.html', {'tutor': tutor, 'transactions': transactionList, 'message': successmsg})
 
-    else:
-        walletForm = AddToWallet()
+        except:
+            raise Http404("Oops! Could not add money. Please try again.")
 
-    tminus30days = datetime.today() - timedelta(days=30)
-    transactionList = "Hi"
+    return render(request, 'main/tutorWallet.html', {'tutor': tutor, 'transactions': transactionList})
 
-    return render(request, 'main/wallet.html', {'wallet': wallet, 'user': currentUser, 'sessions': transactionList, 'walletForm': walletForm})
+
+def studentWallet(request):
+
+    currentUser=request.user
+    student=get_object_or_404(Student, user = currentUser)
+    transactionList=Transactions.objects.filter(user = currentUser).exclude(transactionTime__lt=(datetime.now().date() - timedelta(days=30)))
+
+    if request.method == 'POST':
+        amountstr=request.POST.get("amount")
+        amount=(float)(amountstr)
+
+        student.wallet=(float)(student.wallet) + amount
+        try:
+            student.save()
+
+            Transactions.objects.create(user=currentUser, transactionTime=datetime.now(), addedAmount=amount, subtractedAmount=0, details='Added money to wallet')
+
+            successmsg='Successfully added HKD' + amountstr + " to your wallet!"
+            return render(request, 'main/studentWallet.html', {'student': student, 'transactions': transactionList, 'message': successmsg})
+
+        except:
+            raise Http404("Oops! Could not add money. Please try again.")
+
+    return render(request, 'main/studentWallet.html', {'student': student, 'transactions': transactionList})
+
+    # wallet = Wallet.objects.get(user=currentUser)
+    # student = Student.objects.get(user=currentUser)
+    #
+    # #if request.method == "POST":
+    #
+    #     #walletForm = AddToWallet(data=request.POST)
+    #
+    #     #if walletForm.is_valid():
+    #
+    #     #    wallet.amount += walletForm.cleaned_data['amount']
+    #     #    wallet.save()
+    #
+    #     #else:
+    #     #    print(walletForm.errors)
+    #
+    # #else:
+    #     #walletForm = AddToWallet()
+    #
+    # tminus30days = datetime.today() - timedelta(days=30)
+    # transactionList = "Hi"
+    #
+    # return render(request, 'main/wallet.html', {'wallet': wallet, 'user': currentUser, 'sessions': transactionList, 'walletForm': walletForm})
 
 
 '''def cancelSession(request):
@@ -439,7 +518,7 @@ def myWallet(request):
         except Book.DoesNotExist:
             raise Http404("Book does not exist")
 
-        #book_id=get_object_or_404(Book, pk=pk)
+        # book_id=get_object_or_404(Book, pk=pk)
 
         return render(
             request,

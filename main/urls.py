@@ -22,7 +22,8 @@ urlpatterns = [
     #url(r'^studentandtutreg/$', views.register3, name='tutorreg'),
 
     url(r'^signup/$', views.signup, name='signup'),
-    url(r'^wallet/$', views.myWallet, name='wallet'),
+    url(r'^tutorWallet/$', views.tutorWallet, name='tutorWallet'),
+    url(r'^studentWallet/$', views.studentWallet, name='studentWallet'),
     # url(r'^studentRegistration/$', views.studentRegistration, name='studentRegistration'),
     # url(r'^account/', include('django.contrib.auth.urls')),
 
@@ -35,6 +36,6 @@ urlpatterns = [
     url(r'^mySessions/$', views.mySessions, name='mySessions'),
     url(r'^tutors$', views.TutorListView.as_view(), name='tutor-list'),
     url(r'^tutors/(?P<pk>\d+)$', views.TutorDetailView.as_view(), name='tutor-detail'),
-        url(r'^tutors/update/(?P<pk>\d+)$', views.TutorUpdateView.as_view(), name='tutor-update'),
+    url(r'^tutors/update/(?P<pk>\d+)$', views.TutorUpdateView.as_view(), name='tutor-update'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

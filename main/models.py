@@ -6,6 +6,8 @@ import datetime
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
+from django.utils.translation import ugettext_lazy as _
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 # class Transactions
@@ -23,8 +25,9 @@ class SearchTag(models.Model):
         return self.tagName
 
 
-#tied to the django site
+# tied to the django site
 class SystemWallet(models.Model):
+    TUTORIA_COMMISSION = 0.05
     site = models.OneToOneField(Site)
     systemBalance = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -39,7 +42,8 @@ class Tutor(models.Model):
     university_name = models.CharField(max_length=200)
     hourly_rate = models.DecimalField(max_digits=8, decimal_places=2)
     tutor_intro = models.TextField()
-    wallet = models.DecimalField(max_digits=8, decimal_places=2, default=1000)
+    wallet = models.DecimalField(
+        max_digits=12, decimal_places=2, default=0, validators=[MinValueValidator(0.1)])
     avatar = models.ImageField(upload_to='profile_pics', blank=True)
 
     TUTOR_TYPE = (
@@ -50,7 +54,8 @@ class Tutor(models.Model):
 
     courses = models.ManyToManyField(Course)
     searchTags = models.ManyToManyField(SearchTag)
-    tutor_booking_status = models.BooleanField()
+    wallet = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    # tutor_booking_status = models.BooleanField()
 
     def __str__(self):
         return self.firstName + " " + self.lastName
@@ -119,13 +124,13 @@ class Availability(models.Model):  # blocked slots
 
 class Student(models.Model):
     user = models.OneToOneField(User)
-    #student_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # student_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     firstName = models.CharField(max_length=128)
     lastName = models.CharField(max_length=128)
     email = models.EmailField(max_length=254, unique=True)
-    wallet = models.DecimalField(max_digits=8, decimal_places=2, default=1000)
-    #student_booking_status = models.BooleanField()
-    #tutor = models.ForeigKey(Tutor)
+    wallet = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    # student_booking_status = models.BooleanField()
+    # tutor = models.ForeigKey(Tutor)
 
     def __str__(self):
         return self.firstName
@@ -142,12 +147,14 @@ class Sessions(models.Model):
     systemWallet = models.ForeignKey(SystemWallet)
 
     def __str__(self):
-        return self.studentID.firstName + " " + str(self.bookedDate) + " " + self.tutorID.firstName
+        return "Session with " + self.tutorID.firstName + " on " + str(self.bookedDate) + " " + str(self.bookedStartTime) + " - " + str(self.bookedEndTime) + " for " + self.studentID.firstName
 
     class Meta:
         verbose_name_plural = "Sessions"
         unique_together = (
-            ("studentID", "tutorID", "bookedDate", "bookedStartTime", "bookedEndTime"))
+            (("studentID", "tutorID", "bookedDate"), ("studentID",
+                                                      "tutorID", "bookedDate", "bookedStartTime", "bookedEndTime"))
+        )
 
     def validate_unique(self, exclude=None):
         check = Sessions.objects.filter(studentID=self.studentID)
@@ -159,10 +166,12 @@ class Sessions(models.Model):
         super(Sessions, self).save(*args, **kwargs)
 
 
-class Wallet(models.Model):
-    user = models.OneToOneField(User)
-    currency = models.CharField(max_length=3, default="HKD")
-    amount = models.DecimalField(max_digits=6, decimal_places=2)
+class Transactions(models.Model):
+    user = models.ForeignKey(User)
+    transactionTime = models.DateTimeField()
+    addedAmount = models.DecimalField(max_digits=8, decimal_places=2)
+    subtractedAmount = models.DecimalField(max_digits=8, decimal_places=2)
+    details = models.CharField(max_length=256)
 
     def __str__(self):
         return str(self.user)
