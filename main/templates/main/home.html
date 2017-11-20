@@ -1,0 +1,71 @@
+{% extends "main/baseapp.html" %}
+
+{% block body_block %}
+
+<!-- Preloader Start -->
+  <div id="preloader">
+  <div class="loader"></div>
+  </div>
+  <!-- Preloader End -->
+
+
+
+  <!-- Home & Menu Section Start -->
+  <header id="home" class="home-section">
+
+
+
+      <div class="home-section-background" data-stellar-background-ratio="0.6">
+          <div class="display-table">
+              <div class="display-table-cell">
+                  <div class="container">
+                      <div class="row">
+                          <div class="col-md-12 text-center">
+                              <div class="header-text">
+
+      <div class="row">
+      <div class="col-sm-12">
+          <div class="col-sm-4">
+          </div>
+          <div class="col-sm-4">
+          <h3 class="welcome">Welcome User!</h3>
+
+          </div>
+      </div>
+      <div class="row">
+      <p><br></p>
+      </div>
+
+
+      <br><br>
+
+      <br><br>
+                                  <div class="margin-top-60">
+
+      <a class="w3-bar-item w3-button w3-round-xxlarge w3-padding-16 w3-pink w3-xlarge w3-hover-teal w3-center" href='{% url 'main:tutor-list' %}'>View Tutor List</a>
+      </div>
+      <br><br>
+                                  <div class="margin-top-60">
+                        <a class="w3-bar-item w3-button w3-round-xxlarge w3-padding-16 w3-pink w3-xlarge w3-hover-teal w3-center" href='{% url 'main:mySessions' %}'>View/Cancel Sessions</a>
+                                </div>
+
+                                <br><br>
+                                                            <div class="margin-top-60">
+                                                  <a class="w3-bar-item w3-button w3-round-xxlarge w3-padding-16 w3-pink w3-xlarge w3-hover-teal w3-center" href='{% url 'main:search' %}'>Search Tutors</a>
+                                                          </div>
+
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+  </header>
+
+
+
+
+
+{% endblock %}
