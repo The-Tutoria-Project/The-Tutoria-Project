@@ -28,3 +28,14 @@ class Command(BaseCommand):
             tutor.save()
 
             Transactions.objects.create(user=tutor.user, transactionTime=datetime.now(), addedAmount=amountToPay, subtractedAmount=0, details='Received Payment for Session with '+str(slot.studentID.firstName)+" "+str(slot.studentID.lastName))
+
+
+        #delete sessions and transactions > 30 days old
+        deleteTransactions = Transactions.objects.filter(transactionTime__lt=(datetime.now().date() - timedelta(days=30)))
+        deleteSessions = Sessions.objects.filter(bookedDate__lt=(datetime.now().date() - timedelta(days=30)))
+
+        for transaction in deleteTransactions:
+            transaction.delete()
+
+        for session in deleteSessions:
+            session.delete()
