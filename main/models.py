@@ -5,6 +5,7 @@ import uuid
 import datetime
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
+from django.contrib.sites.models import Site
 
 
 # class Transactions
@@ -22,10 +23,10 @@ class SearchTag(models.Model):
         return self.tagName
 
 
+#tied to the django site
 class SystemWallet(models.Model):
+    site = models.OneToOneField(Site)
     systemBalance = models.DecimalField(max_digits=10, decimal_places=2)
-
-# Create your models here.
 
 
 class Tutor(models.Model):
