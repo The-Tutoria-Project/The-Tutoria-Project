@@ -144,7 +144,7 @@ class Sessions(models.Model):
     bookedStartTime = models.TimeField(null=True)
     bookedEndTime = models.TimeField(null=True)
     sessionAmount = models.DecimalField(max_digits=8, decimal_places=2)
-    systemWallet = models.ForeignKey(SystemWallet)
+    #systemWallet = models.ForeignKey(SystemWallet)
 
     def __str__(self):
         return "Session with " + self.tutorID.firstName + " on " + str(self.bookedDate) + " " + str(self.bookedStartTime) + " - " + str(self.bookedEndTime) + " for " + self.studentID.firstName
@@ -178,10 +178,11 @@ class Transactions(models.Model):
 
 
 class Review(models.Model):
-    student = models.ForeignKey(Student)
-    tutor = models.ForeignKey(Tutor)
-    rating = models.DecimalField(max_digits=6, decimal_places=1)
-    comments = models.CharField(max_length=256)
+    student = models.ForeignKey(Student, blank=False)
+    tutor = models.ForeignKey(Tutor, blank=False)
+    rating = models.DecimalField(max_digits=6, decimal_places=1, null=True)
+    comments = models.CharField(max_length=256, null=True)
+    submitted = models.BooleanField(default=False, null=False)
 
 
 class Coupon(models.Model):

@@ -13,7 +13,7 @@ from django.views.generic import View, ListView, DetailView, TemplateView, Updat
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
-from main.models import Availability, Sessions, Student, Tutor, Course, SystemWallet, Transactions
+from main.models import Availability, Sessions, Student, Tutor, Course, SystemWallet, Transactions, Review
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
@@ -199,10 +199,12 @@ class TutorListView(ListView):
     model = models.Tutor
 
 
-class TutorDetailView(DetailView):
-    context_object_name = 'tutor_details'
-    model = models.Tutor
-    template_name = 'main/tutor_detail.html'
+def TutorDetailView(request, pk):
+
+    tutor = get_object_or_404(Tutor, id=pk)
+    review = Review.objects.filter(tutor=tutor, submitted=True)
+    print(review)
+    return render(request, 'main/tutor_detail.html', {'tutor_details': tutor, 'reviews':review})
 
 
 class TutorUpdateView(UpdateView):
@@ -268,7 +270,7 @@ def confirmedBooking(request):
         try:
             if((float)(student.wallet) - sessionAmount >= 0):
                 Sessions_instance = Sessions.objects.create(
-                    tutorID=tutor, studentID=student, bookedDate=bookedDate, bookedStartTime=bookedStartTime, bookedEndTime=bookedEndTime, sessionAmount=tutor.hourly_rate, systemWallet=syswallet)  # add the new session to the db table
+                    tutorID=tutor, studentID=student, bookedDate=bookedDate, bookedStartTime=bookedStartTime, bookedEndTime=bookedEndTime, sessionAmount=tutor.hourly_rate)  # add the new session to the db table
                 sysWallet.systemBalance = (float)(
                     sysWallet.systemBalance) + sessionAmount
                 sysWallet.save()
@@ -431,6 +433,38 @@ def search(request):
 
     return render(request, 'main/search.html')
 
+
+def review(request):
+
+    currentUser = request.user
+    student = get_object_or_404(Student, user=currentUser)
+    review = Review.objects.filter(student=student, submitted=False)
+
+
+
+    return render(request, 'main/review_list.html', {'review_list': review})
+
+def reviewForm(request, pk):
+
+    tutor = get_object_or_404(Tutor, id=pk)
+    review = get_object_or_404(Review, student__user=request.user, tutor=tutor)
+
+    if request.method == 'POST':
+        comments = request.POST.get('comments')
+        rating = (float)( request.POST.get('rating') )
+
+        try:
+            review.rating = rating
+            review.comments = comments
+            review.submitted = True
+            review.save()
+
+
+        except:
+            print("Error")
+
+
+    return render(request, 'main/reviewForm.html', {'tutor': tutor})
 
 def tutorWallet(request):
 

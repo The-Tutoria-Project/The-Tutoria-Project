@@ -35,7 +35,9 @@ urlpatterns = [
     url(r'^session/$', views.bookSession, name='session'),
     url(r'^mySessions/$', views.mySessions, name='mySessions'),
     url(r'^tutors$', views.TutorListView.as_view(), name='tutor-list'),
-    url(r'^tutors/(?P<pk>\d+)$', views.TutorDetailView.as_view(), name='tutor-detail'),
+    url(r'^tutors/(?P<pk>\d+)$', views.TutorDetailView, name='tutor-detail'),
     url(r'^tutors/update/(?P<pk>\d+)$', views.TutorUpdateView.as_view(), name='tutor-update'),
+    url(r'^reviews$', views.review, name='review-list'),
+    url(r'^reviews/(?P<pk>\d+)$', views.reviewForm, name='review-form'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -22,4 +22,16 @@
 <br>
 
 
+{% if reviews %}
+<br>
+<h1> Average Rating: Sid will calculate </h1>
+<h1> Reviews: </h1>
+<ul>
+
+{% for review in reviews %}
+<li> {{review.student.firstName}} {{review.comments}} {{review.rating}} </li>
+{% endfor %}
+</ul>
+{% endif %}
+
 {% endblock %}
