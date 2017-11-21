@@ -1,0 +1,50 @@
+{% extends "main/baseapp.html" %}
+
+{% block body_block %}
+
+<em> Welcome {{tutor.firstName}}! Your Account Balance is HKD {{tutor.wallet}} </em>
+<br>
+<br>
+
+<form method="post">
+  {% csrf_token %}
+  Transfer Amount (HKD): <input type="number" name='amount' step="0.10" min=1>
+  <input type="submit" value="Transfer">
+<form>
+<br>
+
+{% if transactions %}
+<br>
+<em> Your Transactions for the past 30 days are: </em>
+<br>
+<br>
+
+<table style="width 100% ">
+
+<tr>
+  <th> Transaction Time</th>
+  <th> Debit  </th>
+  <th> Credit   </th>
+  <th> Details   </th>
+</tr>
+
+{% for transaction in transactions %}
+
+<tr>
+  <td> {{transaction.transactionTime}} </td>
+
+  <td> {{transaction.addedAmount}} </td>
+
+  <td> {{transaction.subtractedAmount}} </td>
+
+  <td> {{transaction.details}} </td>
+</tr>
+
+{% endfor %}
+</table>
+<br>
+
+{% endif %}
+
+
+{% endblock %}

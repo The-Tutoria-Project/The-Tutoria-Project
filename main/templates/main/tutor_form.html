@@ -1,0 +1,18 @@
+{% extends "main/baseapp.html" %}
+{% block body_block %}
+
+<h1>Update Tutor Info</h1>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  <input type="submit" class = "btn btn-primary" value="Submit">
+
+</form>
+
+
+
+
+
+{% endblock %}

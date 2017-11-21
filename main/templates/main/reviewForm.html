@@ -1,0 +1,16 @@
+{% extends "main/baseapp.html" %}
+
+{% block body_block %}
+
+<h1>Your Feedback is valuable to us!
+  Please leaving your rating and comments for your session with {{tutor.firstName}} {{tutor.lastName}}</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    Enter a 6 star rating: <input type="number" name='rating' step="1" min=0 max=6>
+    Enter your comments: <input type="text" name='comments'>
+    <input type="submit" value="Submit Review">
+  <form>
+
+
+{% endblock %}

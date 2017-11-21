@@ -1,0 +1,31 @@
+{% extends 'main/baseapp.html' %}
+{% block body_block %}
+
+{% if message %}
+<script>
+  alert('{{ message }}');
+</script>
+{% endif %}
+
+<form method="POST">
+
+{% csrf_token %}
+
+<select name="bookedSlots_id">
+{% for entry in bookedSlots %}
+    <option value="{{ entry.id }}">{{ entry.bookedDate }}</option>
+{% endfor %}
+</select>
+<input type="submit" value = "Cancel" class="w3-bar-item w3-button w3-round-xxlarge w3-padding-large w3-margin-left w3-pink w3-xlarge w3-hover-teal w3-center" onclick="myFunction()">
+
+
+</form>
+
+<script>
+function myFunction() {
+ alert("You have cancelled your session!");
+}
+</script>
+
+
+{% endblock %}

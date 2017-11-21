@@ -1,0 +1,37 @@
+{% extends 'main/baseapp.html' %}
+{% block body_block %}
+
+<a href= "{% url 'main:tutor-list' %}" class="w3-right"> Back to Previous </a>
+<div class=" class="w3-card-4"">
+<p><img src="{{tutor_details.avatar.url}}" class="w3-circle" width = "180"></p>
+<!-- Added this line^-->
+</div>
+<h1>{{tutor_details.firstName}} {{tutor_details.lastName}} </h1>
+
+<br>
+<p><b>Email:</b> {{tutor_details.tutor_email}}</p>
+<p><b>University:</b> {{tutor_details.university_name}}</p>
+<p><b>Tuition Rate (per hour):</b> HKD{{tutor_details.hourly_rate}}</p>
+
+<div class="container">
+  <p><a class='btn btn-warning' href="{% url 'main:tutor-update' pk=tutor_details.pk %}"></a>Update</p>
+
+</div>
+
+ <a href = "{% url 'main:session' %}?value1={{tutor_details.id}}"> <button class="w3-bar-item w3-button w3-round-xxlarge w3-padding-16 w3-teal w3-xlarge w3-hover-pink w3-left"> View Available Sessions </button> </a>
+<br>
+
+
+{% if reviews %}
+<br>
+<h1> Average Rating: Sid will calculate </h1>
+<h1> Reviews: </h1>
+<ul>
+
+{% for review in reviews %}
+<li> {{review.student.firstName}} {{review.comments}} {{review.rating}} </li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

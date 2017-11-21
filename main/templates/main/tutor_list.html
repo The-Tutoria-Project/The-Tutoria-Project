@@ -1,0 +1,30 @@
+{% extends "main/baseapp.html" %}
+
+{% block body_block %}
+
+<h1>List of Tutors</h1>
+<ul class="w3-ul w3-card-4">
+  {% for tutor in tutors %}
+  <li class="w3-bar">
+    <span onclick="window.location.href='tutors/{{ tutor.id }}'" class="w3-bar-item w3-button w3-round-xxlarge w3-padding-16 w3-teal w3-xlarge w3-hover-pink w3-right" ><b>View Profile</b></span>
+   <img src="{{ tutor.avatar.url }}" class="w3-bar-item w3-circle w3-hide-small" style="width:85px">
+
+
+    <div class="w3-bar-item" >
+      <span class="w3-large">{{tutor.firstName}} {{tutor.lastName}}</span><br>
+
+      <b><span> Bio: <span> </b><span>{{tutor.tutor_intro}} </span><br>
+      <b><span> Hourly Rate: <span></b><span>{{tutor.hourly_rate}} </span>
+
+    </div>
+
+  </li>
+
+
+
+
+  {% endfor %}
+</ul>
+
+
+{% endblock %}
