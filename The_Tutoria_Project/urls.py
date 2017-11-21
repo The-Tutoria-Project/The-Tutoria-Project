@@ -30,7 +30,7 @@ from The_Tutoria_Project.admin import courseadmin
 
 urlpatterns = [
 
-    url(r'^$', views.IndexView.as_view()),
+    url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^main/', include('main.urls')),
     url(r'^', include('django.contrib.auth.urls')),
     # url(r'^admin/', admin.site.urls),
@@ -61,7 +61,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^courseadmin/', courseadmin.urls),
 
-    url(r'^logout/$',views.user_logout,name='logout')
 
     #url(r'^accounts/', include('django.contrib.auth.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

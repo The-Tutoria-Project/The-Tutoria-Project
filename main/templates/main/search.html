@@ -1,23 +1,38 @@
 {% extends "main/baseapp.html" %}
-
 {% block body_block %}
 
 <form type="get" action="." style="margin: 0">
-    <input  id="search_box" type="text" name="search_box"  placeholder="Search..." >
+    <input  id="search_name" type="text" name="search_name"  placeholder="Tutor name" >
+    <input  id="search_uni" type="text" name="search_uni"  placeholder="University" >
+    <input  id="search_c" type="text" name="search_c"  placeholder="Course name" >
+    <input  id="search_st" type="text" name="search_st"  placeholder="Subject Tag" >
     <button id="search_submit" type="submit" >Submit</button>
+    <br>
+    <select name="TutorType">
+      <option value=2>Both</option>
+      <option value=0>Contracted</option>
+      <option value=1>Private</option>
+
+    </select>
+    <input  id="min_price" type="text" name="min_price"  placeholder="Minimum Rate" >
+    <input  id="max_price" type="text" name="max_price"  placeholder="Maximum Rate" >
+
+
+
 </form>
 <br>
 <br>
 
 <ul class="w3-ul w3-card-4">
   {% for tutor in tutors %}
+  {{ tutor.firstName }} {{tutor.lastName}}
   <li class="w3-bar">
     <span onclick="window.location.href='{% url 'main:tutor-detail' tutor.id %}'" class="w3-bar-item w3-button w3-round-xxlarge w3-padding-16 w3-teal w3-xlarge w3-hover-pink w3-right" ><b>View Profile</b></span>
    <img src="{{ tutor.avatar.url }}" class="w3-bar-item w3-circle w3-hide-small" style="width:85px">
 
 
     <div class="w3-bar-item" >
-      <span class="w3-large">{{tutor.firstName}} {{tutor.lastName}}</span><br>
+      <span class="w3-large">{{ tutor.firstName }} {{tutor.lastName}}</span><br>
 
       <b><span> Bio: <span> </b><span>{{tutor.tutor_intro}} </span><br>
       <b><span> Hourly Rate: <span></b><span>{{tutor.hourly_rate}} </span>

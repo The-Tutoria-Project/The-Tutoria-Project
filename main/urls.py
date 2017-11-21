@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^studentreg/$', views.studentRegistration, name='studentreg'),
     url(r'^tutorreg/$', views.register2, name='tutorreg'),
     #url(r'^studentandtutreg/$', views.register3, name='tutorreg'),
-
+    url(r'^change_password/$', views.change_password, name='change_password'),
     url(r'^signup/$', views.signup, name='signup'),
     url(r'^tutorWallet/$', views.tutorWallet, name='tutorWallet'),
     url(r'^studentWallet/$', views.studentWallet, name='studentWallet'),

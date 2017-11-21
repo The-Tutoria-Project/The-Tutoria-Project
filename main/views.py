@@ -1,16 +1,20 @@
 import json
 
-
-from main.forms import UserForm, StudentInfoForm, BookingForm, TutorInfoForm
 from . import models
+from main.forms import UserForm, StudentInfoForm, BookingForm, TutorInfoForm
+
+#Searching
 from django.db.models import Q
+from django.db.models import Max
+from decimal import Decimal as D
+
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, render_to_response, redirect
 from django.shortcuts import get_object_or_404
 from django.template import RequestContext
 from django.views.generic import View, ListView, DetailView, TemplateView, UpdateView
-from django.http import HttpResponseRedirect, HttpResponse
+
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from main.models import Availability, Sessions, Student, Tutor, Course, SystemWallet, Transactions, Review
@@ -22,7 +26,9 @@ from django.http import JsonResponse, Http404
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth.forms import PasswordChangeForm
 from datetime import datetime, timedelta
+from django.contrib.auth import update_session_auth_hash
 
 
 class IndexView(TemplateView):
@@ -33,11 +39,23 @@ def signup(request):
     return render(request, 'signup.html', {})
 
 
-@login_required
-def user_logout(request):
-    logout(request)
-    return render(request, 'index.html', {})
+def change_password(request):
 
+    if request.method == "POST":
+        form = PasswordChangeForm(data = request.POST, user=request.user)
+
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request,form.user)
+            return redirect('/main/home')
+        else:
+            return redirect('/main/change_password')
+
+
+    else:
+        form = PasswordChangeForm(user=request.user)
+        args = {'form': form}
+        return render(request, 'main/change_password.html',args)
 
 # Authorisation view using the built in Django authorisation model.
 def register(request):
@@ -422,14 +440,39 @@ def homePage(request):
 
 @login_required
 def search(request):
-
     if request.method == 'GET':
-        userText=request.GET.get('search_box')
-        print(userText)
-        search=Tutor.objects.filter(
-            Q(firstName=userText) | Q(lastName=userText))
-        print(search)
-        return render(request, 'main/search.html', {'tutors': search})
+        userName = request.GET.get('search_name')
+        userUni=request.GET.get('search_uni')
+        userC=request.GET.get('search_c')
+        userS=request.GET.get('search_st')
+        ttyp=request.GET.get('TutorType')
+
+
+        price1 = D(request.GET.get('min_price', 0))
+        price2 = D(request.GET.get('max_price', 0))
+        if not price1:
+            price1=0
+        if not price2:
+            price2 = Tutor.objects.all().aggregate(Max('hourly_rate'))  #setting max default rate incase field left blank
+
+        print('Showing results for:')
+        print(userName)
+        try:
+
+            if(ttyp=='2'):
+
+                search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,hourly_rate__lte=price2,hourly_rate__gte=price1,searchTags__tagName__startswith=userS).distinct()
+            else:
+                search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,tutorType=ttyp,hourly_rate__lte=price2,hourly_rate__gte=price1,searchTags__tagName__startswith=userS).distinct()
+
+            print(search)
+            return render(request, 'main/search.html', {'tutors': search})
+        except:
+            print("except")
+            return render(request, 'main/search.html')
+
+
+
 
     return render(request, 'main/search.html')
 
