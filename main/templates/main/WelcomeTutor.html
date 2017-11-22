@@ -385,6 +385,14 @@ for(var i=1;i<=8;i++){
   {
     document.getElementById(g).innerHTML="Elapsed";
     document.getElementById(g).className="elapsed";
+    for(var k=1;k<=(i+8);k++)
+    {
+      if(checktut==0 && k!=(i+8))
+      {
+        document.getElementById(g+"5").innerHTML="Elapsed";
+        document.getElementById(g+"5").className="elapsed";
+      }
+    }
     if(checktut==0 && (parseInt(a[3])>=3))
     {
       document.getElementById(g+"5").innerHTML="Elapsed";
@@ -392,6 +400,20 @@ for(var i=1;i<=8;i++){
     }
 
   }
+
+  else if(i+8 == parseInt(a[0]+a[1]))
+  {
+      var g="s"+i+"1";
+      document.getElementById(g).innerHTML="Elapsed";
+      document.getElementById(g).className="elapsed";
+      if(checktut==0 && parseInt(a[3])>=3)
+      {
+        document.getElementById(g+"5").innerHTML="Elapsed";
+        document.getElementById(g+"5").className="elapsed";
+      }
+  }
+
+
 }
 }
 
@@ -404,6 +426,14 @@ for(var i=1;i<=8;i++){
   {
     document.getElementById(g).innerHTML="Elapsed";
     document.getElementById(g).className="elapsed";
+    for(var k=1;k<=(i+8);k++)
+    {
+      if(checktut==0 && k!=(i+8))
+      {
+        document.getElementById(g+"5").innerHTML="Elapsed";
+        document.getElementById(g+"5").className="elapsed";
+      }
+    }
     if(checktut==0 && (parseInt(a[3])>=3))
     {
       document.getElementById(g+"5").innerHTML="Elapsed";
@@ -411,6 +441,21 @@ for(var i=1;i<=8;i++){
     }
 
   }
+
+  else if(i+8 == parseInt(a[0]+a[1]))
+  {
+      var g="s"+i+"1";
+      document.getElementById(g).innerHTML="Elapsed";
+      document.getElementById(g).className="elapsed";
+      if(checktut==0 && parseInt(a[3])>=3)
+      {
+        document.getElementById(g+"5").innerHTML="Elapsed";
+        document.getElementById(g+"5").className="elapsed";
+      }
+  }
+
+
+
 }
 }
 //Active Box

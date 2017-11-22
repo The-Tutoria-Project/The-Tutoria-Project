@@ -45,7 +45,7 @@ class Tutor(models.Model):
     lastName = models.CharField(max_length=128)
     tutor_email = models.EmailField(max_length=254, unique=True)
     university_name = models.CharField(max_length=200)
-    hourly_rate = models.DecimalField(max_digits=8, decimal_places=2)
+    hourly_rate = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     tutor_intro = models.TextField()
     wallet = models.DecimalField(
         max_digits=12, decimal_places=2, default=0, validators=[MinValueValidator(0.1)])
