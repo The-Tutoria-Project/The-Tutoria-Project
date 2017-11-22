@@ -481,7 +481,7 @@ def review(request):
 
     currentUser = request.user
     student = get_object_or_404(Student, user=currentUser)
-    review = Review.objects.filter(student=student, submitted=False)
+    review = Review.objects.filter(session__studentID__user=request.user, submitted=False)
 
     if request.method == 'POST':
         reviewID = request.POST['id']
@@ -494,8 +494,11 @@ def review(request):
 
 def reviewForm(request, pk):
 
-    tutor = get_object_or_404(Tutor, id=pk)
-    review = get_object_or_404(Review, student__user=request.user, tutor=tutor)
+
+    review = get_object_or_404(Review, id=pk)
+    print(pk)
+    print(review)
+    tutor = Tutor.objects.get(id=review.session.tutorID.id)
 
     if request.method == 'POST':
         comments = request.POST.get('comments')
@@ -506,6 +509,7 @@ def reviewForm(request, pk):
             review.comments = comments
             review.submitted = True
             review.save()
+            return HttpResponse("You have submitted your review!")
 
 
         except:

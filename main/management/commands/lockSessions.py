@@ -48,7 +48,7 @@ class Command(BaseCommand):
             ['b@c.com'],
             fail_silently=False,
             )
-            Review.objects.create(student=student, tutor=tutor, submitted=False)
+            Review.objects.create(session=slot, submitted=False)
 
         #delete sessions and transactions > 30 days old
         deleteTransactions = Transactions.objects.filter(transactionTime__lt=(datetime.now().date() - timedelta(days=30)))
