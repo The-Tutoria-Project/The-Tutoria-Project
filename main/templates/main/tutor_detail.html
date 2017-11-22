@@ -29,7 +29,10 @@
 <ul>
 
 {% for review in reviews %}
-<li> {{review.student.firstName}} {{review.comments}} {{review.rating}} </li>
+
+<li> {{review.student.firstName}} </li>
+
+<li> {{review.comments}} {{review.rating}} </li>
 {% endfor %}
 </ul>
 {% endif %}

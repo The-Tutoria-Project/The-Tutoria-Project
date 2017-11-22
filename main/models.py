@@ -188,7 +188,7 @@ class Review(models.Model):
     rating = models.DecimalField(max_digits=6, decimal_places=1, null=True)
     comments = models.CharField(max_length=256, null=True)
     submitted = models.BooleanField(default=False, null=False)
-
+    isAnonymous = models.BooleanField(default=False)
 
 
 

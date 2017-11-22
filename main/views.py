@@ -220,7 +220,7 @@ class TutorListView(ListView):
 def TutorDetailView(request, pk):
 
     tutor = get_object_or_404(Tutor, id=pk)
-    review = Review.objects.filter(tutor=tutor, submitted=True)
+    review = Review.objects.filter(session__tutorID=tutor, submitted=True)
     print(review)
     return render(request, 'main/tutor_detail.html', {'tutor_details': tutor, 'reviews':review})
 
@@ -503,11 +503,18 @@ def reviewForm(request, pk):
     if request.method == 'POST':
         comments = request.POST.get('comments')
         rating = (float)( request.POST.get('rating') )
+        check = request.POST.get('check_anon', False)
+
 
         try:
             review.rating = rating
             review.comments = comments
             review.submitted = True
+            if str(check) == "False":
+                review.isAnonymous = False
+            else:
+                review.isAnonymous = True
+
             review.save()
             return HttpResponse("You have submitted your review!")
 
