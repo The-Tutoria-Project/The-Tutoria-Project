@@ -18,11 +18,6 @@ class Course(models.Model):
         return self.name
 
 
-class SearchTag(models.Model):
-    tagName = models.CharField(max_length=128)
-
-    def __str__(self):
-        return self.tagName
 
 
 # tied to the django site
@@ -59,7 +54,8 @@ class Tutor(models.Model):
     tutorType = models.PositiveSmallIntegerField(choices=TUTOR_TYPE, default=0)
 
     courses = models.ManyToManyField(Course)
-    searchTags = models.ManyToManyField(SearchTag)
+    #searchTags = models.ManyToManyField(SearchTag)
+    searchTags = models.CharField(max_length=256, default="Java")
     wallet = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     isActive = models.BooleanField(default=True)
     averageRating = models.DecimalField(max_digits=2, decimal_places=1, default=0)

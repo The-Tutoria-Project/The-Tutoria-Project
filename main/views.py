@@ -492,7 +492,7 @@ def search(request):
         try:
             if(ttyp=='2'): #
 
-                search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,hourly_rate__lte=price2,hourly_rate__gte=price1,searchTags__tagName__startswith=userS).exclude(isActive=False).distinct()
+                search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,hourly_rate__lte=price2,hourly_rate__gte=price1, searchTags__icontains=userS).exclude(isActive=False).distinct()
                 search = search.exclude(user = request.user)
                 next7days = datetime.now().date() + timedelta(days=8)
                 tomorrow = datetime.now().date() + timedelta(days=1)
@@ -508,12 +508,19 @@ def search(request):
                             print(booked+blocked)
                             print("exclude")
                             search = search.exclude(pk=tutor.pk)
+
+                # if userS is not None or userS != '':
+                #     for tutor in search:
+                #         tag_list = tutor.searchTags.split()
+                #         print(tag_list)
+
+
                 if sortPrice == 'on':
                    search = search.order_by('hourly_rate')
 
                     #print("THIS IS THE COUNT" + str(booked+blocked))
             else:
-                search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,tutorType=ttyp,hourly_rate__lte=price2,hourly_rate__gte=price1,searchTags__tagName__startswith=userS).exclude(isActive=False).distinct()
+                search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,tutorType=ttyp,hourly_rate__lte=price2,hourly_rate__gte=price1, searchTags__icontains=userS).exclude(isActive=False).distinct()
                 search = search.exclude(user = request.user)
                 next7days = datetime.now().date() + timedelta(days=8)
                 tomorrow = datetime.now().date() + timedelta(days=1)
