@@ -450,6 +450,7 @@ def search(request):
         userC=request.GET.get('search_c')
         userS=request.GET.get('search_st')
         ttyp=request.GET.get('TutorType')
+        search_7days = request.GET.get('search_7days')
 
 
         price1 = request.GET.get('min_price')
@@ -475,42 +476,44 @@ def search(request):
         try:
             if(ttyp=='2'): #
 
-                search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,hourly_rate__lte=price2,hourly_rate__gte=price1,searchTags__tagName__startswith=userS).distinct()
+                search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,hourly_rate__lte=price2,hourly_rate__gte=price1,searchTags__tagName__startswith=userS).exclude(isActive=False).distinct()
                 search = search.exclude(user = request.user)
                 next7days = datetime.now().date() + timedelta(days=8)
                 tomorrow = datetime.now().date() + timedelta(days=1)
 
-                for tutor in search:
-                    booked = Sessions.objects.filter(tutorID=tutor, bookedDate__range=(tomorrow,next7days)).count()
-                    blocked = Availability.objects.filter(tutor=tutor, date__range=(tomorrow,next7days)).count()
+                if search_7days == 'on':
+                    for tutor in search:
+                        booked = Sessions.objects.filter(tutorID=tutor, bookedDate__range=(tomorrow,next7days)).count()
+                        blocked = Availability.objects.filter(tutor=tutor, date__range=(tomorrow,next7days)).count()
 
-                    print(booked+blocked)
-
-                    if (booked+blocked) >= 56: #max 56 slots for private tutor in 7 days
                         print(booked+blocked)
-                        print("exclude")
-                        search = search.exclude(pk=tutor.pk)
+
+                        if (booked+blocked) >= 56: #max 56 slots for private tutor in 7 days
+                            print(booked+blocked)
+                            print("exclude")
+                            search = search.exclude(pk=tutor.pk)
 
 
                     #print("THIS IS THE COUNT" + str(booked+blocked))
             else:
-                search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,tutorType=ttyp,hourly_rate__lte=price2,hourly_rate__gte=price1,searchTags__tagName__startswith=userS).distinct()
+                search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,tutorType=ttyp,hourly_rate__lte=price2,hourly_rate__gte=price1,searchTags__tagName__startswith=userS).exclude(isActive=False).distinct()
                 search = search.exclude(user = request.user)
                 next7days = datetime.now().date() + timedelta(days=8)
                 tomorrow = datetime.now().date() + timedelta(days=1)
 
-                for tutor in search:
-                    booked = Sessions.objects.filter(tutorID=tutor, bookedDate__range=(tomorrow,next7days)).count()
-                    blocked = Availability.objects.filter(tutor=tutor, date__range=(tomorrow,next7days)).count()
+                if search_7days == 'on':
+                    for tutor in search:
+                        booked = Sessions.objects.filter(tutorID=tutor, bookedDate__range=(tomorrow,next7days)).count()
+                        blocked = Availability.objects.filter(tutor=tutor, date__range=(tomorrow,next7days)).count()
 
-                    maxSlots = 56
-                    if tutor.tutorType == 0:
-                        maxSlots = 112
+                        maxSlots = 56
+                        if tutor.tutorType == 0:
+                            maxSlots = 112
 
-                    if (booked+blocked) >= 56: #max 56 slots for private tutor in 7 days
-                        print(booked+blocked)
-                        print("exclude")
-                        search = search.exclude(pk=tutor.pk)
+                        if (booked+blocked) >= maxSlots: #max 56 slots for private tutor in 7 days
+                            print(booked+blocked)
+                            print("exclude")
+                            search = search.exclude(pk=tutor.pk)
 
 
             return render(request, 'main/search.html', {'tutors': search})
