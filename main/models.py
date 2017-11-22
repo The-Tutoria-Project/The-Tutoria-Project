@@ -62,6 +62,7 @@ class Tutor(models.Model):
     searchTags = models.ManyToManyField(SearchTag)
     wallet = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     isActive = models.BooleanField(default=True)
+    averageRating = models.DecimalField(max_digits=2, decimal_places=1, default=0)
     # tutor_booking_status = models.BooleanField()
 
     def __str__(self):

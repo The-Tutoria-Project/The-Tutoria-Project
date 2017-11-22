@@ -440,6 +440,10 @@ def homePage(request):
 
 @login_required
 def search(request):
+
+    search = Tutor.objects.exclude(user=request.user)
+    print(search)
+
     if request.method == 'GET':
         userName = request.GET.get('search_name')
         userUni=request.GET.get('search_uni')
@@ -448,28 +452,40 @@ def search(request):
         ttyp=request.GET.get('TutorType')
 
 
-        price1 = D(request.GET.get('min_price', 0))
-        price2 = D(request.GET.get('max_price', 0))
-        if not price1:
-            price1=0
-        if not price2:
-            price2 = Tutor.objects.all().aggregate(Max('hourly_rate'))  #setting max default rate incase field left blank
+        price1 = request.GET.get('min_price')
+        price2 = request.GET.get('max_price')
 
-        print('Showing results for:')
+        if price1 is None or price1 == '':
+            price1=0
+
+        else:
+            price1 = (float)(price1)
+
+
+        if price2 is None or price2 == '':
+
+            price2 = Tutor.objects.all().aggregate(Max('hourly_rate'))  #setting max default rate incase field left blank
+            price2 = price2['hourly_rate__max']
+
+        else:
+            price2 = (float)(price2)
+
+         #should not display tutor if student and tutor are the same user
 
         try:
-
             if(ttyp=='2'): #
 
                 search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,hourly_rate__lte=price2,hourly_rate__gte=price1,searchTags__tagName__startswith=userS).distinct()
-                print(search)
+                search = search.exclude(user = request.user)
                 next7days = datetime.now().date() + timedelta(days=8)
                 tomorrow = datetime.now().date() + timedelta(days=1)
 
                 for tutor in search:
                     booked = Sessions.objects.filter(tutorID=tutor, bookedDate__range=(tomorrow,next7days)).count()
                     blocked = Availability.objects.filter(tutor=tutor, date__range=(tomorrow,next7days)).count()
+
                     print(booked+blocked)
+
                     if (booked+blocked) >= 56: #max 56 slots for private tutor in 7 days
                         print(booked+blocked)
                         print("exclude")
@@ -479,29 +495,31 @@ def search(request):
                     #print("THIS IS THE COUNT" + str(booked+blocked))
             else:
                 search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,tutorType=ttyp,hourly_rate__lte=price2,hourly_rate__gte=price1,searchTags__tagName__startswith=userS).distinct()
-
+                search = search.exclude(user = request.user)
                 next7days = datetime.now().date() + timedelta(days=8)
                 tomorrow = datetime.now().date() + timedelta(days=1)
 
                 for tutor in search:
                     booked = Sessions.objects.filter(tutorID=tutor, bookedDate__range=(tomorrow,next7days)).count()
                     blocked = Availability.objects.filter(tutor=tutor, date__range=(tomorrow,next7days)).count()
-                    print(booked+blocked)
+
+                    maxSlots = 56
+                    if tutor.tutorType == 0:
+                        maxSlots = 112
+
                     if (booked+blocked) >= 56: #max 56 slots for private tutor in 7 days
                         print(booked+blocked)
                         print("exclude")
                         search = search.exclude(pk=tutor.pk)
 
-            print(search)
+
             return render(request, 'main/search.html', {'tutors': search})
+
         except:
             print("except")
-            return render(request, 'main/search.html')
+            return render(request, 'main/search.html', {'tutors': search})
 
-
-
-
-    return render(request, 'main/search.html')
+    return render(request, 'main/search.html', {'tutors': search})
 
 
 def review(request):
