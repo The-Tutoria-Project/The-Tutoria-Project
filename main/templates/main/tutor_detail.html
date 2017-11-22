@@ -19,13 +19,13 @@
 
 {% if reviews %}
 <br>
-<h1> Average Rating: Sid will calculate </h1>
+<h1> Average Rating: {{tutor_details.averageRating}}</h1>
 <h1> Reviews: </h1>
 <ul>
 
 {% for review in reviews %}
 
-<li> {{review.student.firstName}} </li>
+<li> {{review.session.studentID.firstName}} </li>
 
 <li> {{review.comments}} {{review.rating}} </li>
 {% endfor %}

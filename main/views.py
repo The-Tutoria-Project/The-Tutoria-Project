@@ -583,13 +583,15 @@ def reviewForm(request, pk):
             else:
                 review.isAnonymous = True
 
-            review.save()
-            allreviews = Review.objects.filter(session__tutorID=tutor, submitted=True).count()
-            tutor.averageRating = ((tutor.averageRating*(allreviews-1))+review.rating)/allreviews;
             tutor.numReviews = tutor.numReviews + 1
+
+            allreviews = tutor.numReviews
+            review.save()
+
+            tutor.averageRating = ( (float)(tutor.averageRating*(allreviews-1))+ (float)(review.rating))/ (float)(allreviews);
             tutor.save()
 
-            return HttpResponse("You have submitted your review!")
+            return render(request, 'main/home.html')
 
 
         except:
