@@ -438,6 +438,13 @@ def mySessions(request):  # View your sessions and cancel them
         return render(request, 'main/mySessions.html', {'bookedSlots': bookedSlots, 'message': message})
     return render(request, 'main/mySessions.html', {'bookedSlots': bookedSlots})
 
+def tutorMySessions(request):
+
+    sessions = Sessions.objects.filter(tutorID__user=request.user)
+    print(sessions)
+    return render(request, 'main/tutorMySessions.html', {'bookedSlots': sessions} )
+
+
 
 def homePage(request):
     return render(request, 'main/home.html')

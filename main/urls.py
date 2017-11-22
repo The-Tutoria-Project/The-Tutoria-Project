@@ -51,5 +51,6 @@ urlpatterns = [
     url(r'^tutors/update/(?P<pk>\d+)$', views.TutorUpdateView.as_view(), name='tutor-update'),
     url(r'^reviews$', views.review, name='review-list'),
     url(r'^reviews/(?P<pk>\d+)$', views.reviewForm, name='review-form'),
+    url(r'^tutorMySessions$', views.tutorMySessions, name='tutorMySessions')
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

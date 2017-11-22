@@ -1,0 +1,15 @@
+{% extends 'main/baseapp.html' %}
+{% block body_block %}
+
+
+
+
+{% csrf_token %}
+<ul>
+
+{% for entry in bookedSlots %}
+    <li> {{ entry }}  {{ entry.tutorID.phoneNo}}</li>
+{% endfor %}
+</ul>
+
+{% endblock %}
