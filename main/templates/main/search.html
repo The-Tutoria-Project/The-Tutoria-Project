@@ -12,7 +12,7 @@
 
 
 
-    <button id="search_submit" type="submit" >Submit</button>
+
     <br>
     <select name="TutorType">
       <option value=2>Both</option>
@@ -22,7 +22,7 @@
     </select>
     <input  id="min_price" type="number" name="min_price"  placeholder="Minimum Rate" >
     <input  id="max_price" type="number" name="max_price"  placeholder="Maximum Rate" >
-
+<button id="search_submit" type="submit" >Update Search/Sort</button>
 
 
 </form>
@@ -32,7 +32,6 @@
 
 <br>
 <br>
-<button id="sortByPrice" onclick="sortList()" >Sort by Price</button>
 <p id='debug'></p>
 {% for tutor in tutors %}
 <ul class="w3-ul w3-card-4" id='list'>
