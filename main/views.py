@@ -483,6 +483,11 @@ def review(request):
     student = get_object_or_404(Student, user=currentUser)
     review = Review.objects.filter(student=student, submitted=False)
 
+    if request.method == 'POST':
+        reviewID = request.POST['id']
+        Review.objects.get(id=reviewID).delete()
+        return render(request, 'main/review_list.html', {'review_list': review})
+
 
 
     return render(request, 'main/review_list.html', {'review_list': review})

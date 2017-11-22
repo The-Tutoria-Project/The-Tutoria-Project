@@ -7,8 +7,11 @@
   {% for review in review_list %}
   <li class="w3-bar">
     <span onclick="window.location.href='reviews/{{ review.tutor.id }}'" class="w3-bar-item w3-button w3-round-xxlarge w3-padding-16 w3-teal w3-xlarge w3-hover-pink w3-right" ><b>Review</b></span>
-
-
+    <form method=post>
+      {% csrf_token %}
+      <input type="hidden" name="id" value="{{ review.id }}">
+      <input type="submit" value="Remove">
+    </form>
 
     <div class="w3-bar-item" >
       <span class="w3-large">{{review.tutor.firstName}}</span><br>
