@@ -63,6 +63,7 @@ class Tutor(models.Model):
     wallet = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     isActive = models.BooleanField(default=True)
     averageRating = models.DecimalField(max_digits=2, decimal_places=1, default=0)
+    numReviews = models.PositiveIntegerField(default=0)
     # tutor_booking_status = models.BooleanField()
 
     def __str__(self):
@@ -73,7 +74,11 @@ class Tutor(models.Model):
         Returns the url to access a particular instance of MyModelName.
         """
         # return reverse('tutor-detail-view', args=[str(self.id)])
-        return reverse("main:tutor-detail", kwargs={'pk': self.pk})
+        return reverse("main:tutor-viewprofile")
+
+    def clean(self):
+        if self.hourly_rate % 10 != 0:
+            raise ValidationError('Hourly rate can only be multiples of 10.')
 
     # def time_slots(self):
     #     return ', '.join([a.start_time for a in self.available_time.all()])

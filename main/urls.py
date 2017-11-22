@@ -7,7 +7,12 @@ from django.conf import settings
 from django.conf.urls import include, url
 # from main.admin import my_new_admin
 from django.contrib import admin
-
+from django.contrib.auth.views import (
+   password_reset,
+   password_reset_done,
+   password_reset_confirm,
+   password_reset_complete
+)
 
 app_name = 'main'
 
@@ -15,6 +20,11 @@ urlpatterns = [
     url(r'^$', views.IndexView.as_view()),
     url(r'^home/$', views.homePage, name='home-page'),
     url(r'^search/$', views.search, name='search'),
+    url(r'^reset-password/$',password_reset, name = 'password_reset'),
+    url(r'^reset-password/done/$',password_reset_done, name = 'password_reset_done'),
+    url(r'^reset-password/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',password_reset_confirm, name = 'password_reset_confirm'),
+    url(r'^reset-password/complete/$',password_reset_complete, name = 'password_reset_complete'),
+
     # url(r'^my_new_admin/(*.)', my_new_admin.root),
     url(r'^register/$', views.register, name='register'),
     url(r'^studentreg/$', views.studentRegistration, name='studentreg'),
@@ -36,6 +46,8 @@ urlpatterns = [
     url(r'^mySessions/$', views.mySessions, name='mySessions'),
     url(r'^tutors$', views.TutorListView.as_view(), name='tutor-list'),
     url(r'^tutors/(?P<pk>\d+)$', views.TutorDetailView, name='tutor-detail'),
+    url(r'^tutors/viewprofile/', views.TutorViewProfile, name='tutor-viewprofile'),
+
     url(r'^tutors/update/(?P<pk>\d+)$', views.TutorUpdateView.as_view(), name='tutor-update'),
     url(r'^reviews$', views.review, name='review-list'),
     url(r'^reviews/(?P<pk>\d+)$', views.reviewForm, name='review-form'),

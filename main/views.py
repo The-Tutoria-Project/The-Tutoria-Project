@@ -195,7 +195,7 @@ def user_login1(request):  # For Tutor
                 try:
                     Tutor.objects.get(user=user)
                     login(request, user)
-                    return render(request, 'main/WelcomeTutor.html', {})
+                    return render(request, 'main/tutor_home.html', {})
                     # return HttpResponseRedirect(reverse('index'))
 
                 except:
@@ -221,12 +221,20 @@ def TutorDetailView(request, pk):
 
     tutor = get_object_or_404(Tutor, id=pk)
     review = Review.objects.filter(session__tutorID=tutor, submitted=True)
+    reviewCount = Review.objects.filter(session__tutorID=tutor, submitted=True).count()
     print(review)
-    return render(request, 'main/tutor_detail.html', {'tutor_details': tutor, 'reviews':review})
+    return render(request, 'main/tutor_detail.html', {'tutor_details': tutor, 'reviews':review, 'reviewCount':reviewCount})
 
+def TutorViewProfile(request):
+
+    tutor = Tutor.objects.get(user=request.user)
+    review = Review.objects.filter(session__tutorID=tutor, submitted=True)
+    # reviewCount = Review.objects.filter(session__tutorID=tutor, submitted=True).count()
+    print(review)
+    return render(request, 'main/tutor_viewprofile.html', {'tutor': tutor, 'reviews':review })
 
 class TutorUpdateView(UpdateView):
-    fields = ('tutor_email',)
+    fields = ('tutor_email','avatar','phoneNo','university_name','courses','tutor_intro','hourly_rate','isActive','searchTags')
     model = models.Tutor
 
 
@@ -451,6 +459,7 @@ def search(request):
         userS=request.GET.get('search_st')
         ttyp=request.GET.get('TutorType')
         search_7days = request.GET.get('search_7days')
+        sortPrice = request.GET.get('sort_price')
 
 
         price1 = request.GET.get('min_price')
@@ -492,7 +501,8 @@ def search(request):
                             print(booked+blocked)
                             print("exclude")
                             search = search.exclude(pk=tutor.pk)
-
+                if sortPrice == 'on':
+                   search = search.order_by('hourly_rate')
 
                     #print("THIS IS THE COUNT" + str(booked+blocked))
             else:
@@ -514,6 +524,9 @@ def search(request):
                             print(booked+blocked)
                             print("exclude")
                             search = search.exclude(pk=tutor.pk)
+
+                if sortPrice == 'on':
+                   search = search.order_by('hourly_rate')
 
 
             return render(request, 'main/search.html', {'tutors': search})
@@ -564,6 +577,11 @@ def reviewForm(request, pk):
                 review.isAnonymous = True
 
             review.save()
+            allreviews = Review.objects.filter(session__tutorID=tutor, submitted=True).count()
+            tutor.averageRating = ((tutor.averageRating*(allreviews-1))+review.rating)/allreviews;
+            tutor.numReviews = tutor.numReviews + 1
+            tutor.save()
+
             return HttpResponse("You have submitted your review!")
 
 

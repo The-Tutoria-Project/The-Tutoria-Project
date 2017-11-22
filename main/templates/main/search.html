@@ -7,6 +7,11 @@
     <input  id="search_c" type="text" name="search_c"  placeholder="Course name" >
     <input  id="search_st" type="text" name="search_st"  placeholder="Subject Tag" >
     Available in next 7 days <input id="search_7days" type="checkbox" name='search_7days'>
+    Sort by hourly price <input id="sort_price" type="checkbox" name='sort_price'>
+
+
+
+
     <button id="search_submit" type="submit" >Submit</button>
     <br>
     <select name="TutorType">
@@ -21,32 +26,36 @@
 
 
 </form>
+
+
+
+
 <br>
 <br>
+<button id="sortByPrice" onclick="sortList()" >Sort by Price</button>
+<p id='debug'></p>
+{% for tutor in tutors %}
+<ul class="w3-ul w3-card-4" id='list'>
 
-<ul class="w3-ul w3-card-4">
-  {% for tutor in tutors %}
-  {{ tutor.firstName }} {{tutor.lastName}}
-  <li class="w3-bar">
-    <span onclick="window.location.href='{% url 'main:tutor-detail' tutor.id %}'" class="w3-bar-item w3-button w3-round-xxlarge w3-padding-16 w3-teal w3-xlarge w3-hover-pink w3-right" ><b>View Profile</b></span>
-   <img src="{{ tutor.avatar.url }}" class="w3-bar-item w3-circle w3-hide-small" style="width:85px">
-
-
-    <div class="w3-bar-item" >
-      <span class="w3-large">{{ tutor.firstName }} {{tutor.lastName}}</span><br>
-
-      <b><span> Bio: <span> </b><span>{{tutor.tutor_intro}} </span><br>
-      <b><span> Hourly Rate: <span></b><span>{{tutor.hourly_rate}} </span>
-
-    </div>
-
-  </li>
-
-
-
-
-  {% endfor %}
+  <li class="w3-bar"> <span onclick="window.location.href='{% url 'main:tutor-detail' tutor.id %}'" class="w3-bar-item w3-button w3-round-xxlarge w3-padding-16 w3-teal w3-xlarge w3-hover-pink w3-right" >
+  <b>View Profile</b></span> <img src="{{ tutor.avatar.url }}" class="w3-bar-item w3-circle w3-hide-small" style="width:85px">
+   <div class="w3-bar-item" >    <span class="w3-large">{{ tutor.firstName }} {{tutor.lastName}}</span>
+   <br>   <b><span> Bio: </span> </b><span>{{tutor.tutor_intro}} </span><br>
+    <b><span> Hourly Rate: </span></b><span>{{tutor.hourly_rate}} </span>
+    <b><span> | University: </span></b><span>{{tutor.university_name}} </span>
+    <b><span id='avgrating'> | Average Rating: </span></b><span id='avgrating1'>{{tutor.averageRating}}</span>
+     </div> </li>
 </ul>
 
+{%  endfor %}
+<script>
+{% for tutor in tutors %}
+if("{{tutor.numReviews}}"<3)
+{
+  document.getElementById('avgrating').innerHTML="";
+  document.getElementById('avgrating1').innerHTML="";
+}
+{%  endfor %}
+</script>
 
 {% endblock %}

@@ -33,29 +33,31 @@ urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^main/', include('main.urls')),
     url(r'^', include('django.contrib.auth.urls')),
+
+
     # url(r'^admin/', admin.site.urls),
     # url(r'^account/', include('django.contrib.auth.urls')),
     # the new password reset URLs
-    url(r'^accounts/password/reset/$',
-        password_reset,
-        {'template_name':
-        'registration/password_reset_form.html'},
-        name="password_reset"),
-    url(r'^accounts/password/reset/done/$',
-        password_reset_done,
-        {'template_name':
-        'registration/password_reset_done.html'},
-        name="password_reset_done"),
-    url(r'^accounts/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
-        password_reset_confirm,
-        {'template_name':
-        'registration/password_reset_confirm.html'},
-        name="password_reset_confirm"),
-    url(r'^accounts/password/done/$',
-        password_reset_complete,
-        {'template_name':
-        'registration/password_reset_complete.html'},
-        name="password_reset_complete"),
+    # url(r'^accounts/password/reset/$',
+    #     password_reset,
+    #     {'template_name':
+    #     'registration/password_reset_form.html'},
+    #     name="password_reset"),
+    # url(r'^accounts/password/reset/done/$',
+    #     password_reset_done,
+    #     {'template_name':
+    #     'registration/password_reset_done.html'},
+    #     name="password_reset_done"),
+    # url(r'^accounts/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
+    #     password_reset_confirm,
+    #     {'template_name':
+    #     'registration/password_reset_confirm.html'},
+    #     name="password_reset_confirm"),
+    # url(r'^accounts/password/done/$',
+    #     password_reset_complete,
+    #     {'template_name':
+    #     'registration/password_reset_complete.html'},
+    #     name="password_reset_complete"),
     # url(r'^accounts/',
     #     include('registration.backends.simple.urls')),
     url(r'^admin/', admin.site.urls),

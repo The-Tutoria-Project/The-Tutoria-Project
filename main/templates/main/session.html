@@ -509,7 +509,7 @@ if(document.getElementById('selected').innerHTML != "Selected Slot: None"){// Ch
     'csrfmiddlewaretoken': '{{ csrf_token }}'};
     $.post(URL, data, function(response){
         if(response === 'success'){ alert("You have booked your session with {{ tutor.firstName}}  {{ tutor.lastName}}. The fee for this session is HKD"+amt1); window.location.reload(false); window.location.replace("{% url 'main:home-page' %}");}
-        else{ alert('Error! :('); }
+        else{ alert('You have already booked a session on this date or do not have enough balance in your wallet!'); }
     });
 
 }
