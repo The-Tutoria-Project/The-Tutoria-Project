@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from main.models import Student, Sessions, Tutor    
+from main.models import Student, Sessions, Tutor
 
 
 class UserForm(forms.ModelForm):
@@ -22,7 +22,7 @@ class TutorInfoForm(forms.ModelForm):
     class Meta():
         model = Tutor
         fields = ('firstName', 'lastName', 'tutor_email', 'courses',
-                  'university_name', 'hourly_rate', 'tutor_intro', 'isStudent','avatar')
+                  'university_name', 'hourly_rate', 'tutor_intro', 'isStudent','phoneNo', 'searchTags', 'avatar')
 
 
 class BookingForm(forms.ModelForm):

@@ -49,7 +49,8 @@ class Tutor(models.Model):
     tutor_intro = models.TextField()
     wallet = models.DecimalField(
         max_digits=12, decimal_places=2, default=0, validators=[MinValueValidator(0.1)])
-    avatar = models.ImageField(upload_to='profile_pics', blank=True)
+    avatar = models.ImageField(upload_to='profile_pics', blank=False)
+    phoneNo = models.PositiveIntegerField(validators=[MaxValueValidator(99999999)], default=00000000)
 
     TUTOR_TYPE = (
         (0, 'Contracted'),
@@ -60,6 +61,7 @@ class Tutor(models.Model):
     courses = models.ManyToManyField(Course)
     searchTags = models.ManyToManyField(SearchTag)
     wallet = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    isActive = models.BooleanField(default=True)
     # tutor_booking_status = models.BooleanField()
 
     def __str__(self):
@@ -134,6 +136,8 @@ class Student(models.Model):
     lastName = models.CharField(max_length=128)
     email = models.EmailField(max_length=254, unique=True)
     wallet = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    phoneNo = models.PositiveIntegerField(validators=[MaxValueValidator(99999999)], default=00000000)
+
     # student_booking_status = models.BooleanField()
     # tutor = models.ForeigKey(Tutor)
 
