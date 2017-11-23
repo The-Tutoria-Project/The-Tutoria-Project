@@ -53,7 +53,7 @@ class Tutor(models.Model):
     )
     tutorType = models.PositiveSmallIntegerField(choices=TUTOR_TYPE, default=0)
 
-    courses = models.ManyToManyField(Course)
+    courses = models.ManyToManyField(Course, null=False)
     #searchTags = models.ManyToManyField(SearchTag)
     searchTags = models.CharField(max_length=256, default="Java")
     wallet = models.DecimalField(max_digits=12, decimal_places=2, default=0)
