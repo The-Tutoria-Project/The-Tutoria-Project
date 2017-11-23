@@ -29,6 +29,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from datetime import datetime, timedelta
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.admin.views.decorators import staff_member_required
 
 
 class IndexView(TemplateView):
@@ -199,7 +200,6 @@ def user_login1(request):  # For Tutor
                     # return HttpResponseRedirect(reverse('index'))
 
                 except:
-                    print("imposter")
                     return HttpResponse("Sorry! You are not registered as a Tutor!")
 
             else:
@@ -210,6 +210,15 @@ def user_login1(request):  # For Tutor
     else:
         return render(request, 'main/login1.html', {})
 
+@staff_member_required
+def staffLogin(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username=username, password=password)
+        print(str(user))
+        
 
 class TutorListView(ListView):
 
