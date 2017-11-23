@@ -7,8 +7,8 @@
   {% else %}
   <form enctype="multipart/form-data" method="post" >
       {% csrf_token %}
-      <!-- {{ user_form.as_p }} -->
       {{ Tutor_form.as_p }}
+    <!-- <li> {{ Tutor_form.tutorType }} </li> -->
 
       <input type="submit" name=" " value="Register">
  </form>

@@ -3,15 +3,22 @@ from main.models import Sessions, Tutor, SystemWallet, Transactions, Student, Re
 from django.contrib.sites.models import Site
 from datetime import datetime, timedelta, time
 from django.core.mail import send_mail
+import argparse
 
 class Command(BaseCommand):
 
+    def add_arguments(self, parser):
+       parser.add_argument('input_time', type=lambda s: datetime.strptime(s, '%H:%M'))
+
     def handle(self, *args, **options):
 
+        input_time= options.get('input_time', None).time()
         TUTORIA_COMMISSION = 0.05 # add this to systemWallet
 
-        endedTime = time(11,30)
-        endedSessions = Sessions.objects.filter(bookedEndTime = endedTime)
+        endedTime = input_time
+
+        #sessions that have ended today at the current time. For demo purposes the current time must be entered in the console
+        endedSessions = Sessions.objects.filter(bookedDate= datetime.today().date(),bookedEndTime = endedTime)
         print(endedSessions)
 
         sysWallet = Site.objects.get_current().systemwallet

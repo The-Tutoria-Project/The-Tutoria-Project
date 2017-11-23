@@ -200,7 +200,7 @@ def user_login1(request):  # For Tutor
 
                 except:
                     print("imposter")
-                    return HttpResponse("Invalid login details")
+                    return HttpResponse("Sorry! You are not registered as a Tutor!")
 
             else:
                 return HttpResponse("ACCOUNT INACTIVE")
@@ -216,7 +216,7 @@ class TutorListView(ListView):
     context_object_name = 'tutors'
     model = models.Tutor
 
-
+@login_required
 def TutorDetailView(request, pk):
 
     tutor = get_object_or_404(Tutor, id=pk)
@@ -225,9 +225,14 @@ def TutorDetailView(request, pk):
     print(review)
     return render(request, 'main/tutor_detail.html', {'tutor_details': tutor, 'reviews':review, 'reviewCount':reviewCount})
 
+@login_required
 def TutorViewProfile(request):
 
-    tutor = Tutor.objects.get(user=request.user)
+    try:
+        tutor = Tutor.objects.get(user=request.user)
+    except:
+        return HttpResponse("Sorry! You are not registered as a Tutor!")
+
     review = Review.objects.filter(session__tutorID=tutor, submitted=True)
     # reviewCount = Review.objects.filter(session__tutorID=tutor, submitted=True).count()
     print(review)
@@ -242,9 +247,14 @@ class TutorUpdateView(UpdateView):
 def bookSession(request):
 
     current_user = request.user
+    try:
+        student = Student.objects.get(user=current_user)  # student
+    except:
+        return HttpResponse("Sorry! You are not registered as a Student!")
+
     tutorID = request.GET["value1"]
     tutor = Tutor.objects.get(id=tutorID)  # get tutor object
-    student = Student.objects.get(user=current_user)  # student
+
     slot = Availability.objects.filter(tutor_id=tutorID)  # blocked slots
 
     currentDate = str(datetime.today().date())
@@ -334,7 +344,7 @@ def confirmedBooking(request):
     #
     # return render(request, self.template_name, {'slots': slot})
 
-
+@login_required
 def tutorSchedule(request):
 
     current_user = request.user
@@ -353,12 +363,15 @@ def tutorSchedule(request):
 
     return render(request, 'main/WelcomeTutor.html', {'slots': slot, 'tutor': tutor, 'currentDate': currentDate, 'currentTime': currentTime, 'sessions': sessions})
 
-
+@login_required
 def blockSuccess(request):
 
     if request.method == 'POST':
         current_user = request.user
-        tutor = Tutor.objects.get(user=current_user)  # get tutor object
+        try:
+            tutor = Tutor.objects.get(user=current_user)  # get tutor object
+        except:
+            raise Http404("Sorry! You are not registered as a Tutor!")
 
         bookeddate_str = request.POST['blockeddate']
         startTime_str = request.POST['startTime']
@@ -391,8 +404,12 @@ def blockSuccess(request):
 def mySessions(request):  # View your sessions and cancel them
 
     currentStudent = request.user
-    print(currentStudent.id)
-    student = Student.objects.get(user=currentStudent)
+
+    try:
+        student = Student.objects.get(user=currentStudent)
+    except:
+        raise Http404("Sorry! You are not registered as a Student!")
+
     bookedSlots = Sessions.objects.filter(studentID_id=student.id)
     sysWallet = Site.objects.get_current().systemwallet
 
@@ -455,6 +472,11 @@ def homePage(request):
 
 @login_required
 def search(request):
+
+    try:
+        student = Student.objects.get(user=request.user)
+    except:
+        raise Http404("Sorry! You are not registered as a Student!")
 
     search = Tutor.objects.exclude(user=request.user)
     print(search)
@@ -551,7 +573,7 @@ def search(request):
 
     return render(request, 'main/search.html', {'tutors': search})
 
-
+@login_required
 def review(request):
 
     currentUser = request.user
@@ -567,6 +589,7 @@ def review(request):
 
     return render(request, 'main/review_list.html', {'review_list': review})
 
+@login_required
 def reviewForm(request, pk):
 
 
@@ -607,6 +630,7 @@ def reviewForm(request, pk):
 
     return render(request, 'main/reviewForm.html', {'tutor': tutor})
 
+@login_required
 def tutorWallet(request):
 
     currentUser=request.user
@@ -633,7 +657,7 @@ def tutorWallet(request):
 
     return render(request, 'main/tutorWallet.html', {'tutor': tutor, 'transactions': transactionList})
 
-
+@login_required
 def studentWallet(request):
 
     currentUser=request.user
@@ -680,22 +704,3 @@ def studentWallet(request):
     # transactionList = "Hi"
     #
     # return render(request, 'main/wallet.html', {'wallet': wallet, 'user': currentUser, 'sessions': transactionList, 'walletForm': walletForm})
-
-
-'''def cancelSession(request):
-
-
-
-
-    def tutor_detail_view(request,pk):
-        try:
-            tutor_id=Book.objects.get(pk=pk)
-        except Book.DoesNotExist:
-            raise Http404("Book does not exist")
-
-        # book_id=get_object_or_404(Book, pk=pk)
-
-        return render(
-            request,
-            'main/tutor_detail.html',
-            context={'tutor_details':tutor_id,}'''
