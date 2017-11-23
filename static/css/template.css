@@ -11,8 +11,10 @@ html, body {
 	line-height: 1.7;
 	margin: 0;
 	padding: 0;
+
 }
 body {
+
 	color: #999;
 	font-size: 13px;
 	font-weight: 400;
@@ -516,11 +518,72 @@ section {
 	font-size: 30px;
 }
 /* =============== LAYOUT - FOOTER AREA =============== */
+.star-ratings-sprite {
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+  font-size: 0;
+  height: 21px;
+  line-height: 0;
+  overflow: hidden;
+  text-indent: -999em;
+  width: 110px;
+  margin: 0 auto;
+
+  &-rating {
+    background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+    background-position: 0 100%;
+    float: left;
+    height: 21px;
+    display:block;
+  }
+
+}
+
+@import "lesshat";
+
+.star-ratings-css {
+  unicode-bidi: bidi-override;
+  color: #c5c5c5;
+  font-size: 25px;
+  height: 25px;
+  width: 100px;
+  margin: 0 auto;
+  position: relative;
+  padding: 0;
+  text-shadow: 0px 1px 0 #a2a2a2;
+
+  &-top {
+    color: #e7711b;
+    padding: 0;
+    position: absolute;
+    z-index: 1;
+    display: block;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+  }
+  &-bottom {
+    padding: 0;
+    display: block;
+    z-index: 0;
+  }
+}
+
+.nino-clr{
+	background-color: rgb(226, 101, 88);
+color: white;
+}
+.searchForm {
+    padding: 12px 20px;
+    margin: 8px 0;
+    color: black;
+}
+
 footer {
-	padding-top: 10px;
+	bottom: 0;
+	left:0;
+	right:0;
 	font-family: 'Montserrat', sans-serif;
 	background: linear-gradient(to bottom, rgba(243,129,129,0.9), rgba(252, 227, 138, 0.9)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
 }
 /* ----------- COPYRIGHT ----------- */
 footer p {
