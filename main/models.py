@@ -76,6 +76,9 @@ class Tutor(models.Model):
         if self.hourly_rate % 10 != 0:
             raise ValidationError('Hourly rate can only be multiples of 10.')
 
+        if self.tutorType == 0 and self.hourly_rate != 0:
+            raise ValidationError('Contracted Tutors may not enter hourly rate.')
+
     # def time_slots(self):
     #     return ', '.join([a.start_time for a in self.available_time.all()])
 

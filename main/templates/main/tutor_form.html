@@ -2,7 +2,7 @@
 {% block body_block %}
 
 <h1>Update Tutor Info</h1>
-
+  <p>You do not need to enter a rate for contracted tutor. The system will always maintain rate to be zero.</p>
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}

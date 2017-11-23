@@ -5,14 +5,12 @@
   <h1> Thank you for registering! </h1>
   <!-- <h3> Fill out this form:</h3> -->
   {% else %}
+  <p id='debug'></p>
+  <ul>
   <form enctype="multipart/form-data" method="post" >
       {% csrf_token %}
-      {{ Tutor_form.as_p }}
-    <!-- <li> {{ Tutor_form.tutorType }} </li> -->
+       {{ Tutor_form.as_p }}
 
-      <input type="submit" name=" " value="Register">
- </form>
- {% endif %}
+       <input type="submit" name=" " value="Register">
 
- </div>
-   {% endblock %}
+{% endblock %}
