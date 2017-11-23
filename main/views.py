@@ -104,10 +104,9 @@ def studentRegistration(request):
             print("HEreeee")
 
             Student.user = request.user
-            print(request.user)
-
+            print(request.FILES)
             if 'avatar' in request.FILES:
-                Student.avatar = request.FILES['profile_pic']
+                Student.avatar = request.FILES['avatar']
 
             Student.save()
 
@@ -138,8 +137,9 @@ def register2(request):
             tutorInst = Tutor_form.save(commit=False)
             tutorInst.user = request.user
 
-            if 'ava†ar' in request.FILES:
-                Tutor.avatar = request.FILES['profile_pic']
+            if 'avatar' in request.FILES:
+                Tutor.avatar = request.FILES['avatar']
+
             if (tutorInst.isStudent == True):
                 Student_instance = Student.objects.create(
                     user=request.user, firstName=tutorInst.firstName, lastName=tutorInst.lastName, email=tutorInst.tutor_email, wallet=tutorInst.wallet)
@@ -163,6 +163,8 @@ def choose_login(request):
 
 
 def user_login(request):
+
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -172,15 +174,17 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return render(request, 'main/home.html', {})
+                return redirect('/main/home/')
                 # return HttpResponseRedirect(reverse('index'))
             else:
                 return HttpResponse("ACCOUNT INACTIVE")
         else:
             print("Login failed")
             return HttpResponse("Invalid login details")
-    else:
-        return render(request, 'main/login.html', {})
+
+
+    return render(request, 'main/login.html', {})
+
 
 
 def user_login1(request):  # For Tutor
@@ -196,7 +200,7 @@ def user_login1(request):  # For Tutor
                 try:
                     Tutor.objects.get(user=user)
                     login(request, user)
-                    return render(request, 'main/tutor_home.html', {})
+                    return redirect('/main/tutorhome/')
                     # return HttpResponseRedirect(reverse('index'))
 
                 except:
@@ -210,15 +214,41 @@ def user_login1(request):  # For Tutor
     else:
         return render(request, 'main/login1.html', {})
 
-@staff_member_required
-def staffLogin(request):
+def tutorHome(request):
+    return render(request, 'main/tutor_home.html', {})
+
+
+def myTutorsHome(request):
+
     if request.method == 'POST':
+        print("yo")
         username = request.POST.get('username')
         password = request.POST.get('password')
-
+        print("HII")
         user = authenticate(username=username, password=password)
         print(str(user))
-        
+        if user:
+            if user.is_active and user.is_staff:
+                return redirect('/main/myTutorsWallet/')
+
+    return render(request, 'main/loginMyTutors.html', {})
+
+def myTutorsWallet(request):
+
+    currentUser=request.user
+    sysWallet = Site.objects.get_current().systemwallet
+
+    if request.method == 'POST':
+        amount= (float)(request.POST.get("amount"))
+
+        if (float)(sysWallet.systemBalance) > amount:
+            sysWallet.systemBalance = (float)(sysWallet.systemBalance) - amount
+            sysWallet.save()
+            return render(request,'main/myTutorsWallet.html', {'user': request.user, 'wallet': sysWallet})
+
+
+    return render(request, 'main/myTutorsWallet.html', {'user': request.user, 'wallet': sysWallet})
+
 
 class TutorListView(ListView):
 

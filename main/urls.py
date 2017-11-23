@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^signup/$', views.signup, name='signup'),
     url(r'^tutorWallet/$', views.tutorWallet, name='tutorWallet'),
     url(r'^studentWallet/$', views.studentWallet, name='studentWallet'),
+    url(r'^myTutorsWallet/$', views.myTutorsWallet, name='myTutorsWallet'),
     # url(r'^studentRegistration/$', views.studentRegistration, name='studentRegistration'),
     # url(r'^account/', include('django.contrib.auth.urls')),
 
@@ -41,13 +42,13 @@ urlpatterns = [
     url(r'^blockSuccess/$', views.blockSuccess, name='blockSuccess'),
     url(r'^user_login/$', views.user_login, name='user_login'),
     url(r'^tutor_login/$', views.user_login1, name='tutor_login'),
-    url(r'^confirmedBooking/$', views.confirmedBooking, name='confirmedBooking'),
+    url(r'^tutorhome/$', views.tutorHome, name='tutor_home'),
     url(r'^session/$', views.bookSession, name='session'),
     url(r'^mySessions/$', views.mySessions, name='mySessions'),
     url(r'^tutors$', views.TutorListView.as_view(), name='tutor-list'),
     url(r'^tutors/(?P<pk>\d+)$', views.TutorDetailView, name='tutor-detail'),
     url(r'^tutors/viewprofile/', views.TutorViewProfile, name='tutor-viewprofile'),
-
+    url(r'^myTutors$', views.myTutorsHome, name='myTutors'),
     url(r'^tutors/update/(?P<pk>\d+)$', views.TutorUpdateView.as_view(), name='tutor-update'),
     url(r'^reviews$', views.review, name='review-list'),
     url(r'^reviews/(?P<pk>\d+)$', views.reviewForm, name='review-form'),
