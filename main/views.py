@@ -370,9 +370,11 @@ def confirmedBooking(request):
 
             # return HttpResponse("Your Session is Successfully Booked!")
 
-        except ValidationError as e:
-            return JsonResponse({'status': 'false', 'message': 'You have another session at the same time or already have a session with this tutor today!'}, status=500)
-        return HttpResponse("Confirmed!")
+        except:
+            return HttpResponse('error')
+        # except ValidationError as e:
+        #     return JsonResponse({'status': 'false', 'message': 'You have another session at the same time or already have a session with this tutor today!'}, status=500)
+        # return HttpResponse("Confirmed!")
 
     # if not slot:
     #     return HttpResponse('<em> Oops! This Tutor has no available time slots </em>')
@@ -492,7 +494,6 @@ def mySessions(request):  # View your sessions and cancel them
 
         message = "Your slot has been successfully deleted. An amount of HKD " + str(refundAmount) + " has been refunded to your wallet"
         bookedSlots = Sessions.objects.filter(studentID_id=student.id)
-        
         return render(request, 'main/mySessions.html', {'bookedSlots': bookedSlots, 'message': message})
     return render(request, 'main/mySessions.html', {'bookedSlots': bookedSlots})
 

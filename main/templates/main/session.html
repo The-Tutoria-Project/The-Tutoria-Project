@@ -1,5 +1,206 @@
-{% extends 'main/baseapp.html' %}
-{% block body_block %}
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+
+  <meta charset="utf-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/materialdesignicons.min.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/prettyPhoto.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/unslider.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/template.css' %}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title> Tutoria </title>
+<style>
+* {box-sizing: border-box;}
+ul {list-style-type: none;}
+
+.month {
+    padding: 70px 25px;
+    width: 100%;
+    background: #1abc9c;
+    text-align: center;
+}
+
+.month ul {
+    margin: 0;
+    padding: 0;
+}
+
+.month ul li {
+    color: white;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.month .prev {
+    float: left;
+    padding-top: 10px;
+}
+
+.month .next {
+    float: right;
+    padding-top: 10px;
+}
+
+.weekdays {
+    margin: 0;
+    padding: 10px 0;
+    background-color: #ddd;
+}
+
+.weekdays li {
+    display: inline-block;
+    width: 12.0%;
+    color: #666;
+    text-align: center;
+}
+
+.wdays {
+    margin: 0;
+    padding: 10px 0;
+    background-color: #ddd;
+}
+
+.wdays li {
+    display: inline-block;
+    width: 12.0%;
+    color: #666;
+    text-align: center;
+}
+.days {
+    padding: 10px 0;
+    background: #eee;
+    margin: 0;
+}
+
+.days li {
+    list-style-type: none;
+    display: inline-block;
+    width: 12.0%;
+    text-align: center;
+    margin-bottom: 5px;
+    font-size:12px;
+    color: #777;
+}
+
+.days li .active {
+    padding: 5px;
+    background: #1abc9c;
+    color: white !important
+}
+
+.days li .blocked {
+    padding: 5px;
+    background: #000000;
+    color: white !important
+}
+
+.days li .available {
+    padding: 5px;
+    background: #ddd;
+}
+
+.days li .elapsed {
+    padding: 5px;
+    background: #777777;
+    color: white !important
+}
+.days li .booked {
+    padding: 5px;
+    background: #960018;
+    color: white !important
+}
+
+
+/* Add media queries for smaller screens */
+@media screen and (max-width:720px) {
+    .weekdays li, .days li {width: 13.1%;}
+}
+
+@media screen and (max-width: 420px) {
+    .weekdays li, .days li {width: 12.5%;}
+    .days li .active {padding: 2px;}
+}
+
+@media screen and (max-width: 290px) {
+    .weekdays li, .days li {width: 12.2%;}
+}
+</style>
+</head>
+
+<body data-target="#nino-navbar" data-spy="scroll">
+
+	<!-- Header
+    ================================================== -->
+	<header id="nino-header">
+		<div id="nino-headerInner">
+			<nav id="nino-navbar" class="navbar navbar-default" role="navigation">
+				<div class="container">
+
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nino-navbar-collapse">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="{% url 'main:home-page' %}">Tutoria</a>
+					</div>
+
+					<!-- Collect the nav links, forms, and other content for toggling -->
+
+
+					<div class="nino-menuItem pull-right">
+						<div class="collapse navbar-collapse pull-left" id="nino-navbar-collapse">
+
+
+							<ul class="nino-iconsGroup nav navbar-nav">
+								<!--<li><a href="#"><i class="mdi mdi-cart-outline nino-icon"></i></a></li>-->
+								<li><a href="{% url 'main:search' %}"  class="nino-search"><i class="mdi mdi-magnify nino-icon"></i></a></li>
+							</ul>
+
+							<ul class="nav navbar-nav">
+								<!--
+								<li class="active"><a href="#nino-header">Home <span class="sr-only">(current)</span></a></li>
+								<li><a href="#nino-story">About</a></li>
+								<li><a href="#nino-services">Service</a></li>
+								<li><a href="#nino-ourTeam">Our Team</a></li>
+								<li><a href="#nino-portfolio">Work</a></li>
+								-->
+								<li><a href="{% url 'logout' %}">Log Out</a></li>
+							</ul>
+
+						</div>
+
+
+
+
+					</div>
+
+
+				</div><!-- /.container-fluid -->
+			</nav>
+
+
+		</div>
+	</header><!--/#header-->
+<!-- ========================================================================================= -->
+
+	<!-- Story About Us
+    ================================================== -->
+    <section id="nino-story">
+    <div class="container">
+
+      <a href="{% url 'main:search' %}" class="nino-btn1 w3-right"> Previous </a>
 
 
 <br> <br>
@@ -205,13 +406,28 @@
 
 
 <br>
-<p id="selected"></p>
-<p id="payment"></p>
+<h4 id="selected"></h4>
+<h4 id="payment"></h4>
 
 
 
-<button id='bookbtn' class="w3-bar-item w3-button w3-round-xxlarge w3-padding-large w3-margin-left w3-pink w3-xlarge w3-hover-teal w3-center" onclick="bookSession()"> Book </button>
+<button id='bookbtn' class="nino-btn1 w3-padding-large w3-large" onclick="bookSession()"> Book </button>
 
+</div>
+</section>
+
+<footer id="footer" class="footer">
+  <div class="container text-center">
+      <div class="row">
+          <div class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12">
+              <div class="main-footer">
+                  <p>Made with <i class="fa fa-heart"></i> by <b>The Binary Baboons</b> 2017</p>
+              </div>
+          </div>
+      </div>
+  </div>
+
+</footer>
 
 
 
@@ -508,8 +724,10 @@ if(document.getElementById('selected').innerHTML != "Selected Slot: None"){// Ch
     'tutID': sendTutorID,
     'csrfmiddlewaretoken': '{{ csrf_token }}'};
     $.post(URL, data, function(response){
-        if(response === 'success'){ alert("You have booked your session with {{ tutor.firstName}}  {{ tutor.lastName}}. The fee for this session is HKD"+amt1); window.location.reload(false); window.location.replace("{% url 'main:home-page' %}");}
-        else{ alert('You have already booked a session on this date or do not have enough balance in your wallet!'); }
+        if(response === 'success')
+        { alert("You have booked your session with {{ tutor.firstName}}  {{ tutor.lastName}}. The fee for this session is HKD"+amt1); window.location.reload(false); window.location.replace("{% url 'main:home-page' %}");}
+        else
+        { alert("You have already booked a session on this date or do not have enough balance in your wallet!"); }
     });
 
 }
@@ -538,4 +756,19 @@ for (var i = 1; i <= 7; i++) {
   }}
 </script>
 
-{% endblock %}
+<!-- Scroll to top
+================================================== -->
+
+<!-- javascript -->
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/isotope.pkgd.min.js"></script>
+<script type="text/javascript" src="js/jquery.prettyPhoto.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.hoverdir.js"></script>
+<script type="text/javascript" src="js/modernizr.custom.97074.js"></script>
+<script type="text/javascript" src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script type="text/javascript" src="js/unslider-min.js"></script>
+<script type="text/javascript" src="js/template.js"></script>
+
+</body>
+</html>
