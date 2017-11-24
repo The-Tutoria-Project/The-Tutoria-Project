@@ -470,8 +470,7 @@ def mySessions(request):  # View your sessions and cancel them
             ).hour, minutes=datetime.today().time().minute)
 
             if tomorrowSlot - nowSlot < timedelta(hours=24):
-                return HttpResponse('<em> Sorry! You cannot cancel a session less than 24 hours before it is scheduled.</em>')
-
+                return render(request, 'main/mySessions.html', {'bookedSlots': bookedSlots, 'message': "Sorry! You cannot cancel a session less than 24 hours before it is scheduled"})
         # refund
         refundAmount = (float)(slotToCancel.tutorID.hourly_rate) * (1.0 + (sysWallet.TUTORIA_COMMISSION))
 
@@ -492,7 +491,8 @@ def mySessions(request):  # View your sessions and cancel them
 
 
         message = "Your slot has been successfully deleted. An amount of HKD " + str(refundAmount) + " has been refunded to your wallet"
-
+        bookedSlots = Sessions.objects.filter(studentID_id=student.id)
+        
         return render(request, 'main/mySessions.html', {'bookedSlots': bookedSlots, 'message': message})
     return render(request, 'main/mySessions.html', {'bookedSlots': bookedSlots})
 

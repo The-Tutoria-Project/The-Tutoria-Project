@@ -37,7 +37,7 @@
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
-						<a class="navbar-brand" href="homepage.html">Tutoria</a>
+						<a class="navbar-brand" href="{% url 'main:home-page' %}">Tutoria</a>
 					</div>
 
 					<!-- Collect the nav links, forms, and other content for toggling -->
@@ -95,23 +95,30 @@
   alert('{{ message }}');
 </script>
 {% endif %}
-
-<form method="POST">
+<br><br>
+<form method="POST" onsubmit="return confirm('Do you really want to Cancel the Session?');">
 
 {% csrf_token %}
+<ul class="w3-ul w3-card-4">
 
-<select name="bookedSlots_id">
 {% for entry in bookedSlots %}
-    <option value="{{ entry.id }}">{{ entry.bookedDate }}</option>
+	<li class="w3-bar">
+		<b> Session: </b>{{ entry.tutorID.firstName}} {{ entry.tutorID.lastName}} on {{ entry.bookedDate }} from {{ entry.bookedStartTime |time:'H:i'}} to {{ entry.bookedEndTime |time:'H:i' }}
+		<span><b>&nbsp &nbsp | &nbsp&nbspContact Number </b>: {{entry.tutorID.phoneNo}}</span>
+		<input type="hidden" name="bookedSlots_id" value="{{ entry.id }}">
+		<input type="submit" value = "Cancel" class="w3-bar-item w3-btn w3-border w3-right" onclick="myFunction()">
+		</li>
 {% endfor %}
-</select>
-<input type="submit" value = "Cancel" class="w3-bar-item w3-button w3-round-xxlarge w3-padding-large w3-margin-left w3-pink w3-xlarge w3-hover-teal w3-center" onclick="myFunction()">
+
+</ul>
 
 
 </form>
 <script>
 function myFunction() {
- alert("You have cancelled your session!");
+
+window.location.reload();
+
 }
 </script>
 
