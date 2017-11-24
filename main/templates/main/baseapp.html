@@ -5,8 +5,14 @@
     <meta charset="utf-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-<title> Tutoria </title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/materialdesignicons.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/prettyPhoto.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/unslider.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/template.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title> Tutoria </title>
 <style>
 * {box-sizing: border-box;}
 ul {list-style-type: none;}
@@ -139,12 +145,6 @@ ul {list-style-type: none;}
 
         </ul>
     </nav>
-
-
-  <h1 class="w3-container w3-teal w3-cell-middle w3-padding-16">Tutoria<span onclick="" class="w3-bar-item w3-button w3-round-xxlarge w3-pink w3-large w3-hover-pink w3-right" ><b>Logout</b></span></h1>
-
-
-
     <div class="container">
       {% block body_block %}
 

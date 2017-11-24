@@ -104,6 +104,7 @@ def studentRegistration(request):
             print("HEreeee")
 
             Student.user = request.user
+            Student.email = request.user.email
             print(request.FILES)
             if 'avatar' in request.FILES:
                 Student.avatar = request.FILES['avatar']
@@ -136,6 +137,7 @@ def register2(request):
 
             tutorInst = Tutor_form.save(commit=False)
             tutorInst.user = request.user
+            tutorInst.tutor_email = request.user.email
 
             if 'avatar' in request.FILES:
                 Tutor.avatar = request.FILES['avatar']
@@ -282,7 +284,7 @@ class TutorUpdateView(UpdateView):
     model = models.Tutor
 
 
-@login_required
+
 def bookSession(request):
 
     current_user = request.user
@@ -304,7 +306,7 @@ def bookSession(request):
     return render(request, 'main/session.html', {'slots': slot, 'tutor': tutor, 'balance': student, 'currentDate': currentDate, 'currentTime': currentTime, 'sessions': sessions})
 
 
-@login_required
+
 def confirmedBooking(request):
 
     if request.method == 'POST':
@@ -638,12 +640,13 @@ def reviewForm(request, pk):
     tutor = Tutor.objects.get(id=review.session.tutorID.id)
 
     if request.method == 'POST':
-        comments = request.POST.get('comments')
-        rating = (float)( request.POST.get('rating') )
-        check = request.POST.get('check_anon', False)
+
 
 
         try:
+            comments = request.POST.get('comments')
+            rating = (float)( request.POST.get('rating') )
+            check = request.POST.get('check_anon', False)
             review.rating = rating
             review.comments = comments
             review.submitted = True
@@ -664,7 +667,9 @@ def reviewForm(request, pk):
 
 
         except:
-            print("Error")
+            print('hey bro')
+            message = "Invalid Submission"
+            return render(request, 'main/reviewForm.html', {'tutor': tutor, 'message':message})
 
 
     return render(request, 'main/reviewForm.html', {'tutor': tutor})
@@ -705,7 +710,18 @@ def studentWallet(request):
 
     if request.method == 'POST':
         amountstr=request.POST.get("amount")
-        amount=(float)(amountstr)
+        print("neeche dekh")
+        print(amountstr)
+        print("del")
+
+        try:
+            amount=(float)(amountstr)
+
+        except:
+            successmsg = "Please enter a valid amount"
+            return render(request, 'main/studentWallet.html', {'student': student, 'transactions': transactionList, 'message': successmsg})
+
+
 
         student.wallet=(float)(student.wallet) + amount
         try:

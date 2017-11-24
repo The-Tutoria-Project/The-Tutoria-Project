@@ -8,20 +8,20 @@ class UserForm(forms.ModelForm):
 
     class Meta():
         model = User
-        fields = ('username', 'password')
+        fields = ('username', 'password', 'email')
         # remove email
 
 
 class StudentInfoForm(forms.ModelForm):
     class Meta():
         model = Student
-        fields = ('firstName', 'lastName', 'email', 'avatar', 'phoneNo')
+        fields = ('firstName', 'lastName', 'avatar', 'phoneNo')
 
 
 class TutorInfoForm(forms.ModelForm):
     class Meta():
         model = Tutor
-        fields = ('firstName', 'lastName', 'tutor_email', 'courses',
+        fields = ('firstName', 'lastName', 'courses',
                   'university_name', 'hourly_rate', 'tutor_intro', 'isStudent','phoneNo', 'searchTags', 'avatar', 'tutorType')
 
 

@@ -39,7 +39,7 @@ class Command(BaseCommand):
 
             send_mail(
             'Tutoria: You have received a payment for your session!',
-            'Dear '+tutor.firstName+", you have received a payment for your latest session with " + student.firstName,
+            'Dear '+tutor.firstName+", you have received a payment of" + tutor.hourly_rate + "for your latest session with " + student.firstName,
             'sagarg95@gmail.com',
             ['a@b.com'],
             fail_silently=False,

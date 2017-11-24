@@ -1,59 +1,225 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
 
-  {% block body_block %}
+	<title>Tutoria</title>
+	<!-- css -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/materialdesignicons.min.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/prettyPhoto.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/unslider.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/template.css' %}" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+</head>
 
-  <!-- Preloader Start -->
-    <div id="preloader">
-    <div class="loader"></div>
-    </div>
-    <!-- Preloader End -->
+<body data-target="#nino-navbar" data-spy="scroll">
 
+	<!-- Header
+    ================================================== -->
+	<header id="nino-header">
+		<div id="nino-headerInner">
+			<nav id="nino-navbar" class="navbar navbar-default" role="navigation">
+				<div class="container">
 
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nino-navbar-collapse">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="homepage.html">Tutoria</a>
+					</div>
 
-    <!-- Home & Menu Section Start -->
-    <header id="home" class="home-section">
-
-
-        <div class="home-section-background" data-stellar-background-ratio="0.6">
-            <div class="display-table">
-                <div class="display-table-cell">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                <div class="header-text">
-
-        <div class="row">
-        <div class="col-sm-12">
-            <div class="col-sm-4">
-            </div>
-            <div class="col-sm-4">
-            <h1 class="welcome">Welcome To Tutoria!</h1>
-            </div>
-        </div>
-        <div class="row">
-        <p><br></p>
-        </div>
-        <br><br>
-        <div class="margin-top-60">
-        <a class="w3-bar-item w3-button w3-round-xxlarge w3-padding-16 w3-pink w3-xlarge w3-hover-teal w3-center" href="main/user_login">Login as student</a>
-        <a class="w3-bar-item w3-button w3-round-xxlarge w3-padding-16 w3-pink w3-xlarge w3-hover-teal w3-center" href="main/tutor_login">Login as Tutor</a>
-        <a class="w3-bar-item w3-button w3-round-xxlarge w3-padding-16 w3-pink w3-xlarge w3-hover-teal w3-center" href="/courseadmin">Login as Admin</a>
-        <a class="w3-bar-item w3-button w3-round-xxlarge w3-padding-16 w3-pink w3-xlarge w3-hover-teal w3-center" href="/main/myTutors">Login as MyTutors</a>
-        </div>
-        <br><br>
-                                    <div class="margin-top-60">
-                          <a class="w3-bar-item w3-button w3-round-xxlarge w3-padding-16 w3-pink w3-xlarge w3-hover-teal w3-center" href="main/register">Sign Up</a>
-                                  </div>
+					<!-- Collect the nav links, forms, and other content for toggling -->
 
 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+					<div class="nino-menuItem pull-right">
+						<div class="collapse navbar-collapse pull-left" id="nino-navbar-collapse">
 
-    </header>
-  {% endblock %}
+							<!--
+							<ul class="nav navbar-nav">
+								<li class="active"><a href="#nino-header">Home <span class="sr-only">(current)</span></a></li>
+								<li><a href="#nino-story">About</a></li>
+								<li><a href="#nino-services">Service</a></li>
+								<li><a href="#nino-ourTeam">Our Team</a></li>
+								<li><a href="#nino-portfolio">Work</a></li>
+								<li><a href="#nino-latestBlog">Blog</a></li>
+							</ul>
+						</div>
+						<ul class="nino-iconsGroup nav navbar-nav">
+							<li><a href="#"><i class="mdi mdi-cart-outline nino-icon"></i></a></li>
+							<li><a href="#" class="nino-search"><i class="mdi mdi-magnify nino-icon"></i></a></li>
+						</ul>
+					-->
+
+
+
+					</div>
+
+
+				</div><!-- /.container-fluid -->
+			</nav>
+
+			<section id="nino-slider" class="carousel slide container" data-ride="carousel">
+
+				<!-- Wrapper for slides -->
+				<div class="carousel-inner" role="listbox">
+					<div class="item active">
+						<h2 class="nino-sectionHeading">
+							<span class="nino-subHeading">Welcome to</span>
+							Tutoria
+						</h2>
+						<a class="nino-btn">Choose a slider option from below to begin</a>
+					</div>
+
+
+					<div class="item">
+						<h2 class="nino-sectionHeading">
+							<span class="nino-subHeading">Sign in as Student</span>
+
+						</h2>
+						<a href="main/user_login" class="nino-btn">Sign in as Student</a>
+					</div>
+
+
+					<div class="item">
+						<h2 class="nino-sectionHeading">
+							<span class="nino-subHeading">Sign in as Tutor</span>
+						</h2>
+						<a href="main/tutor_login" class="nino-btn">Sign in as Tutor</a>
+					</div>
+
+
+					<div class="item">
+						<h2 class="nino-sectionHeading">
+							<span class="nino-subHeading">Sign up for</span>
+							Tutoria
+						</h2>
+						<a href="main/register" class="nino-btn">Sign up</a>
+					</div>
+				</div>
+
+				<!-- Indicators -->
+				<ol class="carousel-indicators clearfix">
+					<li data-target="#nino-slider" data-slide-to="0" class="active">
+						<div class="inner">
+							<span class="number">01</span> Welcome
+						</div>
+					</li>
+					<li data-target="#nino-slider" data-slide-to="1">
+						<div class="inner">
+							<span class="number">02</span> Sign in as Student
+						</div>
+					</li>
+					<li data-target="#nino-slider" data-slide-to="2">
+						<div class="inner">
+							<span class="number">03</span> <span>Sign in as Tutors</span>
+						</div>
+					</li>
+					<li data-target="#nino-slider" data-slide-to="3">
+						<div class="inner">
+							<span class="number">04</span> Register
+						</div>
+					</li>
+				</ol>
+			</section>
+		</div>
+	</header><!--/#header-->
+
+	<!-- Story About Us
+    ================================================== -->
+	<section id="nino-story">
+		<div class="container">
+			<h2 class="nino-sectionHeading">
+				<span class="nino-subHeading">An introduction</span>
+				What is Tutoria
+			</h2>
+			<p class="nino-sectionDesc"> Tutoria is a project that brings Students and Tutors together! </p>
+			<div class="sectionContent">
+				<div class="row nino-hoverEffect">
+					<div class="col-md-3 col-sm-3">
+						<div class="item">
+							<a class="overlay">
+								<span class="content">
+									Sidhant Gupta
+								</span>
+								<img src="{% static 'images/story/img-3.jpg' %}" alt="" class='a'>
+							</a>
+						</div>
+
+					</div>
+					<div class="col-md-3 col-sm-3">
+						<div class="item">
+							<a class="overlay">
+								<span class="content">
+									Sagar Gupta
+								</span>
+								<img src="{% static 'images/story/img-1.jpg' %}" alt="">
+							</a>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-3">
+						<div class="item">
+							<a class="overlay">
+								<span class="content">
+									Rachaika Verma
+								</span>
+								<img src="{% static 'images/story/img-4.jpg' %}" alt="">
+							</a>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-3">
+						<div class="item">
+							<a class="overlay">
+								<span class="content">
+									Varun Vamsi
+								</span>
+								<img src="{% static 'images/story/img-2.jpg' %}" alt="">
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+    <div class="margin-top-60">
+	</section><!--/#nino-story-->
+	<footer id="footer" class="footer">
+			<div class="container text-center">
+					<div class="row">
+							<div class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12">
+									<div class="main-footer">
+											<p>Made with <i class="fa fa-heart"></i> by <b>The Binary Baboons</b> 2017</p>
+                      <a href="/courseadmin">Login as Admin</a>
+                      <a  href="/main/myTutors">Login as MyTutors</a>
+
+									</div>
+							</div>
+					</div>
+			</div>
+
+	</footer>
+    <!-- Scroll to top
+    ================================================== -->
+	<a href="#" id="nino-scrollToTop">Go to Top</a>
+
+	<!-- javascript -->
+	<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/isotope.pkgd.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.prettyPhoto.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.hoverdir.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/modernizr.custom.97074.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/unslider-min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/template.js' %}"></script>
+
+</body>
+</html>

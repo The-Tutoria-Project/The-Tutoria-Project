@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'^tutor_login/$', views.user_login1, name='tutor_login'),
     url(r'^tutorhome/$', views.tutorHome, name='tutor_home'),
     url(r'^session/$', views.bookSession, name='session'),
+    url(r'^confirmedBooking/$', views.confirmedBooking, name='confirmedBooking'),
     url(r'^mySessions/$', views.mySessions, name='mySessions'),
     url(r'^tutors$', views.TutorListView.as_view(), name='tutor-list'),
     url(r'^tutors/(?P<pk>\d+)$', views.TutorDetailView, name='tutor-detail'),
