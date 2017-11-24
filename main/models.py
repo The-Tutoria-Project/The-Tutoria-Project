@@ -44,7 +44,7 @@ class Tutor(models.Model):
     tutor_intro = models.TextField()
     wallet = models.DecimalField(
         max_digits=12, decimal_places=2, default=0, validators=[MinValueValidator(0.1)])
-    avatar = models.ImageField(upload_to='profile_pics', blank=True, default="images/default_avatar.jpg")
+    avatar = models.ImageField(upload_to='profile_pics', default='images/default_avatar.jpg')
     phoneNo = models.PositiveIntegerField(validators=[MaxValueValidator(99999999)])
 
     TUTOR_TYPE = (

@@ -95,7 +95,7 @@ def studentRegistration(request):
 
     if request.method == "POST":
 
-        Student_form = StudentInfoForm(data=request.POST)
+        Student_form = StudentInfoForm(request.POST, request.FILES)
 
         if Student_form.is_valid():
 
@@ -103,9 +103,9 @@ def studentRegistration(request):
 
             Student.user = request.user
             Student.email = request.user.email
-            print(request.FILES)
-            if 'avatar' in request.FILES:
-                Student.avatar = request.FILES['avatar']
+            # print(request.FILES)
+            # if 'avatar' in request.FILES:
+            #     Student.avatar = request.FILES['avatar']
 
             Student.save()
 
@@ -129,7 +129,7 @@ def register2(request):
 
     if request.method == "POST":
 
-        Tutor_form = TutorInfoForm(data=request.POST)
+        Tutor_form = TutorInfoForm(request.POST, request.FILES)
 
         if Tutor_form.is_valid():
 
@@ -137,12 +137,22 @@ def register2(request):
             tutorInst.user = request.user
             tutorInst.tutor_email = request.user.email
 
-            if 'avatar' in request.FILES:
-                Tutor.avatar = request.FILES['avatar']
+            print(request.FILES)
+
+            # if len(request.FILES) == 0
+            # print(request.FILES['avatar'])
+            # if 'avatar' in request.FILES:
+            #     Tutor.avatar = request.FILES['avatar']
+
+            # if len(request.FILES) != 0:
+            # myfile = request.FILES['myfile']
+            # fs = FileSystemStorage()
+            # avatar = fs.save(str(myfile),myfile)
+
 
             if (tutorInst.isStudent == True):
                 Student_instance = Student.objects.create(
-                    user=request.user, firstName=tutorInst.firstName, lastName=tutorInst.lastName, email=tutorInst.tutor_email, wallet=tutorInst.wallet, phoneNo=tutorInst.phoneNo)
+                    user=request.user, firstName=tutorInst.firstName, lastName=tutorInst.lastName, email=tutorInst.tutor_email, wallet=tutorInst.wallet, phoneNo=tutorInst.phoneNo, avatar=tutorInst.avatar)
                 Student_instance.save()
             tutorInst.save()
 
