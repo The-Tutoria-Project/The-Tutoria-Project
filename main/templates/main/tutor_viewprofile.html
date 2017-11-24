@@ -9,7 +9,17 @@
 <br>
 <p><b>Email:</b> {{tutor.tutor_email}}</p>
 <p><b>University:</b> {{tutor.university_name}}</p>
+
+{% if tutor.tutor_type == 0 %}
 <p><b>Tuition Rate (per hour):</b> HKD{{tutor.hourly_rate}}</p>
+{% endif %}
+
+{% if tutor.isActive == True %}
+Your Profile is currently ACTIVE
+
+{% else %}
+Your Profile is currently INACTIVE
+{% endif %}
 
 <button><a href="{% url 'main:tutor-update' pk=tutor.pk %}"> Update </a> </button>
 

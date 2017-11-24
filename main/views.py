@@ -542,7 +542,7 @@ def search(request):
     except:
         raise Http404("Sorry! You are not registered as a Student!")
 
-    search = Tutor.objects.exclude(user=request.user)
+    search = Tutor.objects.exclude(user=request.user).exclude(isActive=False)
     print(search)
 
     if request.method == 'GET':
