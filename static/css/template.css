@@ -15,7 +15,7 @@ html, body {
 }
 body {
 
-	color: #999;
+	color: #000;
 	font-size: 13px;
 	font-weight: 400;
 	overflow-x: hidden;
@@ -284,7 +284,7 @@ img.img-full-width {
 	z-index: 1;
 	opacity: 0;
 	text-align: center;
-	color: #fff;
+	color: #000;
 	text-transform: uppercase;
 	-webkit-transform: translateY(-50%);
 	   -moz-transform: translateY(-50%);
@@ -326,7 +326,7 @@ img.img-full-width {
 }
 #nino-slider .carousel-inner > .item {
 	text-align: center;
-	color: #fff;
+	color: #000;
 }
 #nino-slider .carousel-indicators {
 	width: 100%;
@@ -357,8 +357,8 @@ img.img-full-width {
 }
 #nino-slider .carousel-indicators li:hover .inner,
 #nino-slider .carousel-indicators li.active .inner {
-	border-color: #fff;
-	color: #fff;
+	border-color: #000;
+	color: #000;
 }
 #nino-slider .carousel-indicators li:hover .inner:after,
 #nino-slider .carousel-indicators li.active .inner:after {
@@ -387,7 +387,7 @@ img.img-full-width {
 	font-size: 20px;
 }
 #nino-navbar .navbar-nav > li > a {
-	color: #fff;
+	color: #000;
 	font-weight: 500;
 	text-transform: uppercase;
 	border-bottom: 3px solid transparent;
