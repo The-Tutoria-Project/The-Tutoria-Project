@@ -510,12 +510,22 @@ def mySessions(request):  # View your sessions and cancel them
         # make session available by deleting it
         Transactions.objects.create(user=currentStudent, transactionTime=datetime.now(), addedAmount=refundAmount, subtractedAmount=0, details='Cancelled a '+str(slotToCancel))
 
+        send_mail(
+        'Tutoria: You have Cancelled your Session!',
+        "The details of cacelled session are: " + str(slotToCancel),
+        'myTutors@gmail.com',
+        [student.email],
+        fail_silently=False,
+        )
+        
         slotToCancel.delete()
 
 
 
         message = "Your slot has been successfully deleted. An amount of HKD " + str(refundAmount) + " has been refunded to your wallet"
         bookedSlots = Sessions.objects.filter(studentID_id=student.id)
+
+
         return render(request, 'main/mySessions.html', {'bookedSlots': bookedSlots, 'message': message})
     return render(request, 'main/mySessions.html', {'bookedSlots': bookedSlots})
 
