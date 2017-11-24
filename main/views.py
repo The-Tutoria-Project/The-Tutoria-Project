@@ -142,7 +142,7 @@ def register2(request):
 
             if (tutorInst.isStudent == True):
                 Student_instance = Student.objects.create(
-                    user=request.user, firstName=tutorInst.firstName, lastName=tutorInst.lastName, email=tutorInst.tutor_email, wallet=tutorInst.wallet)
+                    user=request.user, firstName=tutorInst.firstName, lastName=tutorInst.lastName, email=tutorInst.tutor_email, wallet=tutorInst.wallet, phoneNo=tutorInst.phoneNo)
                 Student_instance.save()
             tutorInst.save()
 
@@ -517,7 +517,7 @@ def mySessions(request):  # View your sessions and cancel them
         [student.email],
         fail_silently=False,
         )
-        
+
         slotToCancel.delete()
 
 

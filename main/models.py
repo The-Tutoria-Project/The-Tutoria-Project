@@ -45,7 +45,7 @@ class Tutor(models.Model):
     wallet = models.DecimalField(
         max_digits=12, decimal_places=2, default=0, validators=[MinValueValidator(0.1)])
     avatar = models.ImageField(upload_to='profile_pics', blank=True, default="images/default_avatar.jpg")
-    phoneNo = models.PositiveIntegerField(validators=[MaxValueValidator(99999999), MinValueValidator(11111111)])
+    phoneNo = models.PositiveIntegerField(validators=[MaxValueValidator(99999999)])
 
     TUTOR_TYPE = (
         (0, 'Contracted'),
@@ -141,7 +141,7 @@ class Student(models.Model):
     lastName = models.CharField(max_length=128)
     email = models.EmailField(max_length=254, unique=True)
     wallet = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-    phoneNo = models.PositiveIntegerField(validators=[MaxValueValidator(99999999)], default=00000000)
+    phoneNo = models.PositiveIntegerField(validators=[MaxValueValidator(99999999)])
     avatar = models.ImageField(upload_to='profile_pics', blank=True, default="images/default_avatar.jpg")
     # student_booking_status = models.BooleanField()
     # tutor = models.ForeigKey(Tutor)

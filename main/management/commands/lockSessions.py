@@ -8,17 +8,20 @@ import argparse
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
-       parser.add_argument('input_time', type=lambda s: datetime.strptime(s, '%H:%M'))
+        parser.add_argument('input_date', type=lambda s: datetime.strptime(s, '%Y-%m-%d'))
+        parser.add_argument('input_time', type=lambda s: datetime.strptime(s, '%H:%M'))
 
     def handle(self, *args, **options):
 
         input_time= options.get('input_time', None).time()
+        input_date= options.get('input_date', None).date()
+
         TUTORIA_COMMISSION = 0.05 # add this to systemWallet
 
         endedTime = input_time
 
         #sessions that have ended today at the current time. For demo purposes the current time must be entered in the console
-        endedSessions = Sessions.objects.filter(bookedDate= datetime.today().date(),bookedEndTime = endedTime)
+        endedSessions = Sessions.objects.filter(bookedDate= input_date,bookedEndTime = endedTime)
         print(endedSessions)
 
         sysWallet = Site.objects.get_current().systemwallet
@@ -39,9 +42,9 @@ class Command(BaseCommand):
 
             send_mail(
             'Tutoria: You have received a payment for your session!',
-            'Dear '+tutor.firstName+", you have received a payment of HKD" + str(tutor.hourly_rate) + " for your latest session with " + student.firstName,
+            'Dear '+tutor.firstName+", you have received a payment of HKD " + str(tutor.hourly_rate) + " for your latest session with " + student.firstName,
             'myTutors@gmail.com',
-            ['a@b.com'],
+            [tutor.tutor_email],
             fail_silently=False,
             )
 
@@ -50,9 +53,9 @@ class Command(BaseCommand):
             #invitation to review
             send_mail(
             'Tutoria: Submit a Review!',
-            'Dear '+student.firstName+", you may now submit a review for your latest session with " + tutor.firstName,
+            'Dear '+student.firstName+", you may now submit a review for your latest session with " + tutor.firstName + ". The Details are: " + str(slot),
             'myTutors@gmail.com',
-            ['b@c.com'],
+            [student.email],
             fail_silently=False,
             )
             Review.objects.create(session=slot, submitted=False)
