@@ -1,18 +1,103 @@
-{% block body_block %}
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
 
-<div class=" class="w3-card-4"">
+  <meta charset="utf-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/materialdesignicons.min.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/prettyPhoto.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/unslider.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/template.css' %}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title> Tutoria </title>
+
+</head>
+
+<body data-target="#nino-navbar" data-spy="scroll">
+
+	<!-- Header
+    ================================================== -->
+	<header id="nino-header">
+		<div id="nino-headerInner">
+			<nav id="nino-navbar" class="navbar navbar-default" role="navigation">
+				<div class="container">
+
+					<!-- Brand and toggle get grouped for better mobile display -->
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nino-navbar-collapse">
+							<span class="sr-only">Toggle navigation</span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+							<span class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="{% url 'main:tutor_home' %}">Tutoria</a>
+					</div>
+
+					<!-- Collect the nav links, forms, and other content for toggling -->
+
+
+					<div class="nino-menuItem pull-right">
+						<div class="collapse navbar-collapse pull-left" id="nino-navbar-collapse">
+
+							<ul class="nav navbar-nav">
+								<!--
+								<li class="active"><a href="#nino-header">Home <span class="sr-only">(current)</span></a></li>
+								<li><a href="#nino-story">About</a></li>
+								<li><a href="#nino-services">Service</a></li>
+								<li><a href="#nino-ourTeam">Our Team</a></li>
+								<li><a href="#nino-portfolio">Work</a></li>
+								-->
+								<li><a href="{% url 'logout' %}">Log Out</a></li>
+							</ul>
+
+						</div>
+
+
+
+
+					</div>
+
+
+				</div><!-- /.container-fluid -->
+			</nav>
+
+
+		</div>
+	</header><!--/#header-->
+<!-- ========================================================================================= -->
+
+	<!-- Story About Us
+    ================================================== -->
+	<section id="nino-story">
+		<div class="container">
+      <a href="{% url 'main:tutor_home' %}" class="nino-btn1 w3-right"> Previous </a>
+      <br><br>
+<div>
+  <div class="col-sm-6">
 <p><img src="{{tutor.avatar.url}}" class="w3-circle" width = "180"></p>
 <!-- Added this line^-->
-</div>
 <h1>{{tutor.firstName}} {{tutor.lastName}} </h1>
+<h4 id='avgrating'> Average Rating: {{tutor.averageRating}} </h4>
+</div>
+<div class="col-sm-6">
+
 
 <br>
+<p><b>Introduction:</b> {{tutor.tutor_intro}}</p>
 <p><b>Email:</b> {{tutor.tutor_email}}</p>
 <p><b>University:</b> {{tutor.university_name}}</p>
-
-{% if tutor.tutor_type == 0 %}
-<p><b>Tuition Rate (per hour):</b> HKD{{tutor.hourly_rate}}</p>
+{% if tutor.hourly_rate != 0 %}
+<p id='hourly_rate'><b>Tuition Rate (per hour):</b> HKD{{tutor.hourly_rate}}</p>
 {% endif %}
+<p><b>Subject Tags:</b> {{tutor.searchTags}}</p>
+
 
 {% if tutor.isActive == True %}
 Your Profile is currently ACTIVE
@@ -20,23 +105,85 @@ Your Profile is currently ACTIVE
 {% else %}
 Your Profile is currently INACTIVE
 {% endif %}
-
-<button><a href="{% url 'main:tutor-update' pk=tutor.pk %}"> Update </a> </button>
-
-
+<br><br>
+<a href="{% url 'main:tutor-update' pk=tutor.pk %}"><button class="w3-bar-item w3-button w3-round-large w3-padding-16 w3-large nino-clr w3-left"> Update/Edit Profile </button></a> 
+<br>
+</div>
+</div>
 {% if reviews %}
 <br>
-<h1> Average Rating: Sid will calculate </h1>
-<h1> Reviews: </h1>
-<ul>
+<h1 id=> Reviews: </h1>
+
+
+<ul class="w3-ul w3-card-4">
 
 {% for review in reviews %}
+<li class="w3-bar">
 
-<li> {{review.student.firstName}} </li>
+{% if review.isAnonymous %}
+<img  src="{% static 'images/default_student.png' %}" class="w3-bar-item w3-circle w3-hide-small" style="width:85px">
+{% else %}
+<img  src="{{ review.session.studentID.avatar.url }}" class="w3-bar-item w3-circle w3-hide-small" style="width:85px">
+{% endif %}
+<span class="w3-bar-item w3-large">
+{% if review.isAnonymous %}
+Anonymous
+{% else %}
+{{ review.session.studentID.firstName }} {{review.session.studentID.lastName}}
+{% endif %}
+</span>
+<div class="w3-bar-item" >
+<span class="w3-large"><b> </b> " {{review.comments}} "</span>
 
-<li> {{review.comments}} {{review.rating}} </li>
+   </div>
+   <div class="w3-bar-item w3-right" >
+  <span class="">{{review.rating}} / 5.0 </span>
+  <div class="star-ratings-css">
+    <div class="star-ratings-css-top" style="width: 50%"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+  </div>
+
+     </div>
+
+
+
+ </li>
+
 {% endfor %}
-</ul>
+
 {% endif %}
 
-{% endblock %}
+</ul>
+</div>
+</section><!--/#nino-story-->
+
+
+<footer id="footer" class="footer">
+  <div class="container text-center">
+      <div class="row">
+          <div class="col-md-6 col-md-offset-3 col-sm-12 col-xs-12">
+              <div class="main-footer">
+                  <p>Made with <i class="fa fa-heart"></i> by <b>The Binary Baboons</b> 2017</p>
+
+              </div>
+          </div>
+      </div>
+  </div>
+
+</footer>
+<!-- Scroll to top
+================================================== -->
+<a href="#" id="nino-scrollToTop">Go to Top</a>
+
+<!-- javascript -->
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/isotope.pkgd.min.js"></script>
+<script type="text/javascript" src="js/jquery.prettyPhoto.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.hoverdir.js"></script>
+<script type="text/javascript" src="js/modernizr.custom.97074.js"></script>
+<script type="text/javascript" src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+<script type="text/javascript" src="js/unslider-min.js"></script>
+<script type="text/javascript" src="js/template.js"></script>
+
+</body>
+</html>
