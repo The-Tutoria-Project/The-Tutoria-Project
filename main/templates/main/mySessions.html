@@ -96,6 +96,8 @@
 </script>
 {% endif %}
 <br><br>
+
+{% if bookedSlots %}
 <form method="POST" onsubmit="return confirm('Do you really want to Cancel the Session?');">
 
 {% csrf_token %}
@@ -109,11 +111,14 @@
 		<input type="submit" value = "Cancel" class="w3-bar-item w3-btn w3-border w3-right" onclick="myFunction()">
 		</li>
 {% endfor %}
-
+	
 </ul>
 
 
 </form>
+{% else %}
+You have no sessions booked currently!
+{% endif %}
 <script>
 function myFunction() {
 

@@ -155,7 +155,7 @@ def register2(request):
                     user=request.user, firstName=tutorInst.firstName, lastName=tutorInst.lastName, email=tutorInst.tutor_email, wallet=tutorInst.wallet, phoneNo=tutorInst.phoneNo, avatar=tutorInst.avatar)
                 Student_instance.save()
             tutorInst.save()
-
+            Tutor_form.save_m2m()
             registered = True
 
         else:
@@ -488,8 +488,6 @@ def mySessions(request):  # View your sessions and cancel them
     bookedSlots = Sessions.objects.filter(studentID_id=student.id)
     sysWallet = Site.objects.get_current().systemwallet
 
-    if not bookedSlots:
-        return HttpResponse('<em> Oops! You have no sessions booked currently</em>')
 
     if request.method == 'POST':
         print(request.POST.get('bookedSlots_id'))
@@ -597,8 +595,9 @@ def search(request):
 
         try:
             if(ttyp=='2'): #
-
+                print(search)
                 search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,hourly_rate__lte=price2,hourly_rate__gte=price1, searchTags__icontains=userS).exclude(isActive=False).distinct()
+                print(search)
                 search = search.exclude(user = request.user)
                 next7days = datetime.now().date() + timedelta(days=8)
                 tomorrow = datetime.now().date() + timedelta(days=1)
@@ -627,6 +626,8 @@ def search(request):
                     #print("THIS IS THE COUNT" + str(booked+blocked))
             else:
                 search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,tutorType=ttyp,hourly_rate__lte=price2,hourly_rate__gte=price1, searchTags__icontains=userS).exclude(isActive=False).distinct()
+                print("second time")
+                print(search)
                 search = search.exclude(user = request.user)
                 next7days = datetime.now().date() + timedelta(days=8)
                 tomorrow = datetime.now().date() + timedelta(days=1)
