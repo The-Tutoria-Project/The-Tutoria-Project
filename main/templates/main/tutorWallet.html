@@ -2,6 +2,12 @@
 
 {% block body_block %}
 
+{% if message %}
+<script>
+alert("{{message}}")
+</script>
+{% endif %}
+
 <em> Welcome {{tutor.firstName}}! Your Account Balance is HKD {{tutor.wallet}} </em>
 <br>
 <br>
@@ -9,7 +15,7 @@
 <form method="post">
   {% csrf_token %}
   Transfer Amount (HKD): <input type="number" name='amount' step="0.10" min=1>
-  <input type="submit" value="Transfer">
+  <input type="submit" onclick="return confirm('Are you sure you want to add this amount?')" value="Transfer">
 <form>
 <br>
 

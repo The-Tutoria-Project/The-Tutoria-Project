@@ -100,8 +100,6 @@ def studentRegistration(request):
         if Student_form.is_valid():
 
             Student = Student_form.save(commit=False)
-            print(Student)
-            print("HEreeee")
 
             Student.user = request.user
             Student.email = request.user.email
@@ -195,7 +193,7 @@ def user_login1(request):  # For Tutor
         password = request.POST.get('password')
 
         user = authenticate(username=username, password=password)
-        print(str(user))
+
         if user:
             if user.is_active:
 
@@ -223,12 +221,12 @@ def tutorHome(request):
 def myTutorsHome(request):
 
     if request.method == 'POST':
-        print("yo")
+
         username = request.POST.get('username')
         password = request.POST.get('password')
-        print("HII")
+
         user = authenticate(username=username, password=password)
-        print(str(user))
+
         if user:
             if user.is_active and user.is_staff:
                 return redirect('/main/myTutorsWallet/')
@@ -283,7 +281,6 @@ def TutorViewProfile(request):
 
     review = Review.objects.filter(session__tutorID=tutor, submitted=True)
     # reviewCount = Review.objects.filter(session__tutorID=tutor, submitted=True).count()
-    print(review)
     return render(request, 'main/tutor_viewprofile.html', {'tutor': tutor, 'reviews':review })
 
 class TutorUpdateView(UpdateView):
@@ -711,9 +708,15 @@ def tutorWallet(request):
 
 
     if request.method == 'POST':
-        amount=request.POST.get("amount")
+        amountstr=request.POST.get("amount")
 
-        tutor.wallet=(float)(tutor.wallet) + amount
+        try:
+            amount = (float)(amountstr)
+        except:
+            amount = 0
+            return render(request, 'main/tutorWallet.html', {'tutor': tutor, 'transactions': transactionList, 'message': "Please enter a valid amount"})
+
+        tutor.wallet=(float)(tutor.wallet) - amount
         try:
             tutor.save()
 

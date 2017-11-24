@@ -117,16 +117,18 @@
   <li class="w3-bar"> <span onclick="window.location.href='{% url 'main:tutor-detail' tutor.id %}'" class="w3-bar-item w3-btn w3-round-xxlarge w3-padding-16 w3-xlarge w3-right nino-clr" >
   <b>View Profile</b></span> <img  src="{{ tutor.avatar.url }}" class="w3-bar-item w3-circle w3-hide-small" style="width:85px">
    <div class="w3-bar-item" >    <span class="w3-large">{{ tutor.firstName }} {{tutor.lastName}}</span>
-   <br>   <b><span> Bio: </span> </b><span>{{tutor.tutor_intro}} </span><br>
-    <b><span> Hourly Rate: </span></b><span>{{tutor.hourly_rate}} </span>
+   <!-- <br>   <b><span> Biography: </span> </b><span>{{tutor.tutor_intro}} </span><br> -->
+    <b><span> Hourly Rate: </span></b><span>HKD {{tutor.hourly_rate}} </span>
     <b><span> | University: </span></b><span>{{tutor.university_name}} </span>
-    <b><span id='avgrating'> | Average Rating: </span></b><span id='avgrating1'>{{tutor.averageRating}}</span>
-    <b><span> | Tags: </span></b><span id='avgrating1'>{{tutor.searchTags}}</span>
+		<b><span> | Tags: </span></b><span>{{tutor.searchTags}}</span>
+		{% if tutor.numReviews > 3 %}
+    <b><span id='avgrating'> | Average Rating: </span></b><span id='avgrating1'>{{tutor.averageRating}}/5.0</span>
+		{% endif %}
      </div> </li>
 </ul>
 
 {%  endfor %}
-<script>
+<!-- <script>
 {% for tutor in tutors %}
 if("{{tutor.numReviews}}"<3)
 {
@@ -134,7 +136,7 @@ if("{{tutor.numReviews}}"<3)
   document.getElementById('avgrating1').innerHTML="";
 }
 {%  endfor %}
-</script>
+</script> -->
 
 </div>
 </section><!--/#nino-story-->
