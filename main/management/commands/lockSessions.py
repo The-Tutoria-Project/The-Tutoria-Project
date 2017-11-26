@@ -19,8 +19,6 @@ class Command(BaseCommand):
         TUTORIA_COMMISSION = 0.05 # add this to systemWallet
 
         endedTime = input_time
-
-        #sessions that have ended today at the current time. For demo purposes the current time must be entered in the console
         endedSessions = Sessions.objects.filter(bookedDate= input_date,bookedEndTime = endedTime)
         print(endedSessions)
 

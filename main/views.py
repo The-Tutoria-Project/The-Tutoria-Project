@@ -122,6 +122,7 @@ def studentRegistration(request):
 
 
 # Authorisation view using the built in Django authorisation model.
+''' Tutor registration '''
 def register2(request):
     registered = False
     uid = request.GET['value1']
@@ -172,6 +173,7 @@ def choose_login(request):
     return render(request, 'Chooselogin.html', {})
 
 
+'''Student login '''
 def user_login(request):
 
 
@@ -196,7 +198,7 @@ def user_login(request):
     return render(request, 'main/login.html', {})
 
 
-
+'''Tutor Login'''
 def user_login1(request):  # For Tutor
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -243,6 +245,7 @@ def myTutorsHome(request):
 
     return render(request, 'main/loginMyTutors.html', {})
 
+@login_required
 def myTutorsWallet(request):
 
     currentUser=request.user
@@ -298,7 +301,8 @@ class TutorUpdateView(UpdateView):
     model = models.Tutor
 
 
-
+@login_required
+''' View Available Sessions to book'''
 def bookSession(request):
 
     current_user = request.user
@@ -320,7 +324,8 @@ def bookSession(request):
     return render(request, 'main/session.html', {'slots': slot, 'tutor': tutor, 'balance': student, 'currentDate': currentDate, 'currentTime': currentTime, 'sessions': sessions})
 
 
-
+@login_required
+''' make a booking'''
 def confirmedBooking(request):
 
     if request.method == 'POST':
@@ -342,11 +347,6 @@ def confirmedBooking(request):
         bookedDate = datetime.strptime(bookeddate_str, '%Y-%m-%d').date()
         bookedStartTime = datetime.strptime(startTime_str, '%H:%M').time()
         bookedEndTime = datetime.strptime(endTime_str, '%H:%M').time()
-
-        # print(bookedStartTime)
-        # print(current_user.id)
-        # basically if there is a post request take that student_id, tutor id and time slot and save it in session.
-        # form = request.POST
 
         slot = Availability.objects.filter(tutor_id=tutorID)
 
@@ -392,11 +392,6 @@ def confirmedBooking(request):
             else:
                 print("error")
                 return HttpResponse("You dont have enough money for this :(")
-                # selectedSlot.isAvailable = False  # make the slot unavailable
-            # selectedSlot.save()  # save the slot
-            # wallet.amount -= sessionAmount
-            # still stuff to do
-            # print(balance)
 
             return HttpResponse('success')
 
@@ -404,20 +399,7 @@ def confirmedBooking(request):
 
         except:
             return HttpResponse('error')
-        # except ValidationError as e:
-        #     return JsonResponse({'status': 'false', 'message': 'You have another session at the same time or already have a session with this tutor today!'}, status=500)
-        # return HttpResponse("Confirmed!")
 
-    # if not slot:
-    #     return HttpResponse('<em> Oops! This Tutor has no available time slots </em>')
-
-    # else:
-    #     if request.method == 'POST':
-    #         selectedSlot = get_object_or_404(Availability, pk=request.POST.get(
-    #             'slot_id'))  # get user's selected slot from the drop down
-    #
-    #
-    # return render(request, self.template_name, {'slots': slot})
 
 @login_required
 def tutorSchedule(request):
@@ -476,6 +458,7 @@ def blockSuccess(request):
 
 
 @login_required
+''' Student's current sessions '''
 def mySessions(request):  # View your sessions and cancel them
 
     currentStudent = request.user
@@ -537,6 +520,7 @@ def mySessions(request):  # View your sessions and cancel them
         return render(request, 'main/mySessions.html', {'bookedSlots': bookedSlots, 'message': message})
     return render(request, 'main/mySessions.html', {'bookedSlots': bookedSlots})
 
+@login_required
 def tutorMySessions(request):
 
     sessions = Sessions.objects.filter(tutorID__user=request.user)
@@ -544,13 +528,10 @@ def tutorMySessions(request):
     return render(request, 'main/tutorMySessions.html', {'bookedSlots': sessions} )
 
 
-
+'''Student Home Page '''
 def homePage(request):
     return render(request, 'main/home.html')
 
-
-# def studentreg(request):
-#     return render(request, 'main/studentreg.html')
 
 @login_required
 def search(request):
@@ -591,10 +572,9 @@ def search(request):
         else:
             price2 = (float)(price2)
 
-         #should not display tutor if student and tutor are the same user
 
         try:
-            if(ttyp=='2'): #
+            if(ttyp=='2'): #type is both private and contracted
                 print(search)
                 search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,hourly_rate__lte=price2,hourly_rate__gte=price1, searchTags__icontains=userS).exclude(isActive=False).distinct()
                 print(search)
@@ -614,16 +594,11 @@ def search(request):
                             print("exclude")
                             search = search.exclude(pk=tutor.pk)
 
-                # if userS is not None or userS != '':
-                #     for tutor in search:
-                #         tag_list = tutor.searchTags.split()
-                #         print(tag_list)
 
 
                 if sortPrice == 'on':
                    search = search.order_by('hourly_rate')
 
-                    #print("THIS IS THE COUNT" + str(booked+blocked))
             else:
                 search=Tutor.objects.filter((Q(firstName__startswith=userName) | Q(lastName__startswith=userName)), university_name__startswith=userUni,courses__name__startswith=userC,tutorType=ttyp,hourly_rate__lte=price2,hourly_rate__gte=price1, searchTags__icontains=userS).exclude(isActive=False).distinct()
                 print("second time")
@@ -653,7 +628,6 @@ def search(request):
             return render(request, 'main/search.html', {'tutors': search})
 
         except:
-            print("except")
             return render(request, 'main/search.html', {'tutors': search})
 
     return render(request, 'main/search.html', {'tutors': search})
@@ -676,7 +650,6 @@ def review(request):
 
 @login_required
 def reviewForm(request, pk):
-
 
     review = get_object_or_404(Review, id=pk)
     print(pk)
@@ -711,7 +684,6 @@ def reviewForm(request, pk):
 
 
         except:
-            print('hey bro')
             message = "Invalid Submission"
             return render(request, 'main/reviewForm.html', {'tutor': tutor, 'message':message})
 
@@ -787,25 +759,4 @@ def studentWallet(request):
 
     return render(request, 'main/studentWallet.html', {'student': student, 'transactions': transactionList})
 
-    # wallet = Wallet.objects.get(user=currentUser)
-    # student = Student.objects.get(user=currentUser)
-    #
-    # #if request.method == "POST":
-    #
-    #     #walletForm = AddToWallet(data=request.POST)
-    #
-    #     #if walletForm.is_valid():
-    #
-    #     #    wallet.amount += walletForm.cleaned_data['amount']
-    #     #    wallet.save()
-    #
-    #     #else:
-    #     #    print(walletForm.errors)
-    #
-    # #else:
-    #     #walletForm = AddToWallet()
-    #
-    # tminus30days = datetime.today() - timedelta(days=30)
-    # transactionList = "Hi"
-    #
-    # return render(request, 'main/wallet.html', {'wallet': wallet, 'user': currentUser, 'sessions': transactionList, 'walletForm': walletForm})
+    

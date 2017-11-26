@@ -18,8 +18,6 @@ class Course(models.Model):
         return self.name
 
 
-
-
 # tied to the django site
 class SystemWallet(models.Model):
     TUTORIA_COMMISSION = 0.05
@@ -30,8 +28,6 @@ class SystemWallet(models.Model):
         return "MyTutors System Wallet"
 
 
-
-
 class Tutor(models.Model):
 
     user = models.OneToOneField(User)
@@ -40,12 +36,15 @@ class Tutor(models.Model):
     lastName = models.CharField(max_length=128)
     tutor_email = models.EmailField(max_length=254, unique=True)
     university_name = models.CharField(max_length=200)
-    hourly_rate = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    hourly_rate = models.DecimalField(
+        max_digits=8, decimal_places=2, default=0)
     tutor_intro = models.TextField()
     wallet = models.DecimalField(
         max_digits=12, decimal_places=2, default=0, validators=[MinValueValidator(0.1)])
-    avatar = models.ImageField(upload_to='profile_pics', default='images/default_avatar.jpg')
-    phoneNo = models.PositiveIntegerField(validators=[MaxValueValidator(99999999)])
+    avatar = models.ImageField(
+        upload_to='profile_pics', default='images/default_avatar.jpg')
+    phoneNo = models.PositiveIntegerField(
+        validators=[MaxValueValidator(99999999)])
 
     TUTOR_TYPE = (
         (0, 'Contracted'),
@@ -58,7 +57,8 @@ class Tutor(models.Model):
     searchTags = models.CharField(max_length=256, default="Java")
     wallet = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     isActive = models.BooleanField(default=True)
-    averageRating = models.DecimalField(max_digits=2, decimal_places=1, default=0)
+    averageRating = models.DecimalField(
+        max_digits=2, decimal_places=1, default=0)
     numReviews = models.PositiveIntegerField(default=0)
     # tutor_booking_status = models.BooleanField()
 
@@ -77,7 +77,8 @@ class Tutor(models.Model):
             raise ValidationError('Hourly rate can only be multiples of 10.')
 
         if self.tutorType == 0 and self.hourly_rate != 0:
-            raise ValidationError('Contracted Tutors may not enter hourly rate.')
+            raise ValidationError(
+                'Contracted Tutors may not enter hourly rate.')
 
     # def time_slots(self):
     #     return ', '.join([a.start_time for a in self.available_time.all()])
@@ -87,38 +88,6 @@ class Availability(models.Model):  # blocked slots
 
     tutor = models.ForeignKey(Tutor, null=True)
     date = models.DateField()
-    # MONTH_CHOICES = (
-    #     (0, 'Jan'),
-    #     (1, 'Feb'),
-    #     (2, 'Mar'),
-    #     (3, 'Apr'),
-    #     (4, 'May'),
-    #     (5, 'Jun'),
-    #     (6, 'Jul'),
-    #     (7, 'Aug'),
-    #     (8, 'Sep'),
-    #     (9, 'Oct'),
-    #     (10, 'Nov'),
-    #     (11, 'Dec'),
-    # )
-    #
-    # DAY_CHOICES = ()
-    # for i in range(0, 32):
-    #     DAY_CHOICES += ((i, str(i + 1)),)
-    #
-    # WEEKDAY_CHOICES = (
-    #     (0, 'Monday'),
-    #     (1, 'Tuesday'),
-    #     (2, 'Wednesday'),
-    #     (3, 'Thursday'),
-    #     (4, 'Friday'),
-    #     (5, 'Saturday'),
-    #     (6, 'Sunday'),
-    # )
-    # # Tutor.objects.values_list('available_time__weekday')
-    # month = models.PositiveSmallIntegerField(choices=MONTH_CHOICES)
-    # day = models.PositiveSmallIntegerField(choices=DAY_CHOICES)
-    # weekday = models.PositiveSmallIntegerField(choices=WEEKDAY_CHOICES)
     startTime = models.TimeField()
     endTime = models.TimeField()
 
@@ -129,8 +98,7 @@ class Availability(models.Model):  # blocked slots
         #                                                        "weekday", "endTime"), ("tutor", "weekday", "startTime", "endTime"))
 
     def __str__(self):
-        # return str(self.weekday) + " " + str(self.start_time) + "-" + str(self.end_time)
-        # return str(self.get_month_display()) + " " + str(self.get_day_display()) + ", " + str(self.tutor) + " " + str(self.startTime) + " - " + str(self.endTime)
+
         return str(self.tutor) + " " + str(self.date) + " " + str(self.startTime) + " - " + str(self.endTime)
 
 
@@ -141,10 +109,10 @@ class Student(models.Model):
     lastName = models.CharField(max_length=128)
     email = models.EmailField(max_length=254, unique=True)
     wallet = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-    phoneNo = models.PositiveIntegerField(validators=[MaxValueValidator(99999999)])
-    avatar = models.ImageField(upload_to='profile_pics', blank=True, default="images/default_avatar.jpg")
-    # student_booking_status = models.BooleanField()
-    # tutor = models.ForeigKey(Tutor)
+    phoneNo = models.PositiveIntegerField(
+        validators=[MaxValueValidator(99999999)])
+    avatar = models.ImageField(
+        upload_to='profile_pics', blank=True, default="images/default_avatar.jpg")
 
     def __str__(self):
         return self.firstName
@@ -200,15 +168,6 @@ class Review(models.Model):
     isAnonymous = models.BooleanField(default=False)
 
 
-
 class Coupon(models.Model):
     couponCode = models.CharField(max_length=6, default="000000")
     expiryDate = models.DateField()
-
-
-#
-# class Booking(model.Model):
-#
-#     tutor_id = models.ForeignKey(Tutor)
-#     student_id = models.ForeignKey(Student)
-#     session = models.ForeignKey(Availability)
