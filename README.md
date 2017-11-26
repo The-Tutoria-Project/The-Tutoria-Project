@@ -11,7 +11,7 @@ Web Application written in Django, HTML, JavaScript and JQuery.
   - pip install django[argon2]
   - pip install bcrypt
   - pip install Pillow
-- In case file uploading does not work, please update the ```MEDIA_ROOT``` in ```The-Tutoria-Project\settings.py``` to the absolute path of the uploads folder.
+- In case file uploading does not work, please update the ```MEDIA_ROOT``` in ```The_Tutoria_Project\settings.py``` to the absolute path of the uploads folder.
 
 
 Run ```python manage.py runserver``` in the folder containing manage.py. The application is accessible on ```localhost:8000```
