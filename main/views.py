@@ -30,7 +30,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from datetime import datetime, timedelta
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.admin.views.decorators import staff_member_required
-
+from django.core.mail import send_mail
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -241,7 +241,14 @@ def myTutorsWallet(request):
     sysWallet = Site.objects.get_current().systemwallet
 
     if request.method == 'POST':
-        amount= (float)(request.POST.get("amount"))
+
+        amount = 0
+        amountstr = request.POST.get("amount")
+
+        try:
+            amount = (float)(amountstr)
+        except:
+            amount = 0
 
         if (float)(sysWallet.systemBalance) > amount:
             sysWallet.systemBalance = (float)(sysWallet.systemBalance) - amount
@@ -356,6 +363,24 @@ def confirmedBooking(request):
 
                 transaction = Transactions.objects.create(user=student.user, transactionTime=datetime.now(
                 ), addedAmount=0, subtractedAmount=sessionAmount, details="Booked a " + str(Sessions_instance))
+
+
+                send_mail(
+                'Tutoria: You have been Booked for a new Session!',
+                "Dear " + tutor.firstName + ", You have been booked by " + student.firstName + "  for a session on " + str(Sessions_instance.bookedDate) + " from " + str(Sessions_instance.bookedStartTime) + " to " + str(Sessions_instance.bookedEndTime),
+                'myTutors@gmail.com',
+                [tutor.tutor_email],
+                fail_silently=False,
+                )
+
+                send_mail(
+                'Tutoria: You have Booked a new Session!',
+                "The details of your upcoming session are: " + str(Sessions_instance),
+                'myTutors@gmail.com',
+                [student.email],
+                fail_silently=False,
+                )
+
 
             else:
                 print("error")
@@ -694,7 +719,7 @@ def tutorWallet(request):
 
             Transactions.objects.create(user=currentUser, transactionTime=datetime.now(), addedAmount=0, subtractedAmount=amount, details='Transferred money from wallet')
 
-            successmsg='Successfully transferred HKD' + amountstr + " from your wallet!"
+            successmsg='Successfully transferred HKD ' + amountstr + " from your wallet!"
             return render(request, 'main/tutorWallet.html', {'tutor': tutor, 'transactions': transactionList, 'message': successmsg})
 
         except:
@@ -730,7 +755,7 @@ def studentWallet(request):
 
             Transactions.objects.create(user=currentUser, transactionTime=datetime.now(), addedAmount=amount, subtractedAmount=0, details='Added money to wallet')
 
-            successmsg='Successfully added HKD' + amountstr + " to your wallet!"
+            successmsg='Successfully added HKD ' + amountstr + " to your wallet!"
             return render(request, 'main/studentWallet.html', {'student': student, 'transactions': transactionList, 'message': successmsg})
 
         except:

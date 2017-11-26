@@ -40,7 +40,7 @@ class Command(BaseCommand):
             send_mail(
             'Tutoria: You have received a payment for your session!',
             'Dear '+tutor.firstName+", you have received a payment of HKD" + str(tutor.hourly_rate) + " for your latest session with " + student.firstName,
-            'sagarg95@gmail.com',
+            'myTutors@gmail.com',
             ['a@b.com'],
             fail_silently=False,
             )
@@ -51,7 +51,7 @@ class Command(BaseCommand):
             send_mail(
             'Tutoria: Submit a Review!',
             'Dear '+student.firstName+", you may now submit a review for your latest session with " + tutor.firstName,
-            'sagarg95@gmail.com',
+            'myTutors@gmail.com',
             ['b@c.com'],
             fail_silently=False,
             )

@@ -103,7 +103,7 @@
 <form method="post">
   {% csrf_token %}
   Add Amount (HKD): <input type="number" name='amount' step="0.10" min=1>
-  <input type="submit" class="nino-btn" value="Add">
+  <input type="submit" onclick="return confirm('Are you sure you want to add this amount?')" class="nino-btn" value="Add">
 <form>
 <br>
 <br>
